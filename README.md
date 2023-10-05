@@ -25,6 +25,7 @@
 
 -> Where to store these VCs and VPs JWT and proofs
 -> How to handle the on chain part , and how to verify and post these proofs on chain
+-> Create Custom Schemas
 
 ## Answers
 
