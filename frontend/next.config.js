@@ -1,12 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack: (config) => {
-    config.resolve.fallback = { fs: false };
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        "fs": false,
+        "net": false,
+        "tls": false
+      }
+    }
+    return config
+  }
+}
 
-    return config;
-  },
-  transpilePackages: ["@jpmorganchase/onyx-ssi-sdk"],
-};
-
-module.exports = nextConfig;
+module.exports = nextConfig
