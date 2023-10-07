@@ -17,6 +17,10 @@ import {
   verifyCredentialJWT,
   verifyRevocationStatus,
   SchemaManager,
+  PROOF_OF_ADDRESS,
+  PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_ADDRESS,
 } from "@jpmorganchase/onyx-ssi-sdk";
 // import { camelCase, includes } from "lodash";
 
@@ -25,9 +29,35 @@ import {
   ISSUER_ES256K_PRIVATE_KEY,
   HOLDER_ES256K_PRIVATE_KEY,
   JwtPayload,
+  PROOF_OF_REGISTERATION,
+  SCHEMA_PROOF_OF_REGISTERATION,
+  SCHEMA_PROOF_OF_TAX,
+  SCHEMA_VERIFIED_CUSTOMER,
+  SCHEMA_TRUST_SCORE_CREDENTIAL,
+  VERIFIED_CUSTOMER,
+  TRUST_SCORE_CREDENTIAL,
+  PROOF_OF_TAX,
 } from "@/config";
 const didEthr = new EthrDIDMethod(ethrProvider);
 const jwtService = new JWTService();
+
+export const SchemaURL = {
+  SCHEMA_PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_ADDRESS,
+  SCHEMA_PROOF_OF_REGISTERATION,
+  SCHEMA_PROOF_OF_TAX,
+  SCHEMA_VERIFIED_CUSTOMER,
+  SCHEMA_TRUST_SCORE_CREDENTIAL,
+};
+
+export const CredentialType = {
+  PROOF_OF_ADDRESS,
+  PROOF_OF_NAME,
+  PROOF_OF_REGISTERATION,
+  PROOF_OF_TAX,
+  VERIFIED_CUSTOMER,
+  TRUST_SCORE_CREDENTIAL,
+};
 
 // Create a New DID:ethr
 const createDidEthr = async () => {
@@ -58,7 +88,7 @@ const createVc = async (
   VC_SCHEMA_URL: string,
   subjectData: any,
   credentialType: string
-) => {
+): Promise<string | undefined> => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
     return;
@@ -140,7 +170,8 @@ const createVc = async (
     additionalParams
   );
 
-  console.log(JSON.stringify(vc, null, 2));
+  const result = JSON.stringify(vc, null, 2);
+  console.log(result);
 
   // store the vc Credential
   // store the VC DID keys
@@ -149,10 +180,11 @@ const createVc = async (
   //     path.resolve(VC_DIR_PATH, `${camelCase(credentialType)}.json`),
   //     JSON.stringify(vc, null, 2)
   //   );
+  return vc;
 };
 
-// Issuer Sign a VC , returns JWT
-const signVc = async (vc: any) => {
+// Issuer Sign a VC : verifiable Credential type , returns JWT
+const signVc = async (vc: any): Promise<string | undefined> => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
     return;
@@ -332,7 +364,13 @@ const createAndSignVp = async (VC: any[], signedVcJwts: string[]) => {
 };
 
 // verify
-const verify = async (VP: any, signedVpJwt: string) => {
+// Name of the VP
+// Signed vp JWT
+// Can return status of each type of verificationStatus
+const verifyVPJwt = async (
+  VP: any,
+  signedVpJwt: string
+): Promise<boolean | undefined> => {
   // Instantiating the didResolver
   const didResolver = getSupportedResolvers([didEthr]);
 
@@ -378,13 +416,14 @@ const verify = async (VP: any, signedVpJwt: string) => {
               console.log("\nVC JWT is Valid\n");
 
               console.log("\nDecoding VC\n");
-
+              // TODO: NOT Sure
               const vc = jwtService.decodeJWT(vcJwt)?.payload as JwtPayload;
               console.log(vc);
 
               try {
                 const vcVerified = await verifyDIDs(vcJwt, didResolver);
                 console.log(`\nVerification status: ${vcVerified}\n`);
+
                 if (vcVerified) {
                   console.log("\nVerifying subject data with schema\n");
                   // the 2nd param has to be true in case the location if local
@@ -400,19 +439,26 @@ const verify = async (VP: any, signedVpJwt: string) => {
                   );
                   console.log(`\nRevocation status: ${revocationStatus}\n`);
                 } else {
+                  return;
                 }
               } catch (error) {
+                return;
                 console.log(error);
               }
             } else {
               console.log("Invalid VC JWT");
+              return;
             }
           } catch (error) {
             console.log(error);
+            return;
           }
         });
+
+        return true;
       } else {
         console.log("Invalid VP JWT");
+        return;
       }
     } catch (err) {
       console.log("\nFailed to fetch file\n");
@@ -422,6 +468,7 @@ const verify = async (VP: any, signedVpJwt: string) => {
       console.log(
         "\nPlease refer to issuer scripts to generate and sign a VP\n"
       );
+      return;
     }
   } else {
     console.log("\nVP not found!\n");
@@ -429,7 +476,8 @@ const verify = async (VP: any, signedVpJwt: string) => {
       "\nTo run this script you must have a valid VP and a valid signed VP JWT\n"
     );
     console.log("\nPlease refer to issuer scripts to generate and sign a VP\n");
+    return;
   }
 };
 
-export { createVc, signVc, createAndSignVc };
+export { createVc, signVc, createAndSignVc, verifyVPJwt };
