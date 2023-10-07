@@ -9,25 +9,26 @@
 
 ## TO DOs with Onyx
 
--> Generate or add a Issuer Private Key
+-> Generate or add a Issuer Private Key ✅
 -> Create a VC Schema
--> Get Holder's DID:ethr
--> Create a VC's DID key and generate the VC
--> Sign the Credential with Issuer's DID and generate a VC JWT
--> Holder can create VPs from one or multiple VCs using the Holder's DID:ethr generatign the
+-> Get Holder's DID:ethr ✅
+-> Create a VC's DID key and generate the VC ✅
+-> Sign the Credential with Issuer's DID and generate a VC JWT ✅
+-> Request VCs to be signed
+-> Holder can create VPs from one or multiple VCs using the Holder's DID:ethr generatign the ✅
 -> Sign VPs using Holder's DID:ethr and generate a VP JWT
--> Verify the VP JWT
--> Get VCs from the VP
--> Verify the VCs
--> We can also verify the VCs , with a particular Schema & other params
+-> Verify the VP JWT ✅
+-> Get VCs from the VP ✅
+-> Verify the VCs ✅
+-> We can also verify the VCs , with a particular Schema & other params ✅
 
 ## Challenges
 
 -> Where to store these VCs and VPs JWT and proofs
+-> How to share
 -> How to handle the on chain part , and how to verify and post these proofs on chain
--> Create Custom Schemas
 
 ## Answers
 
--> maybe we can use the register from DID here , to add the record on chain
+-> Maybe we can use the register from DID here , to add the record on chain
 -> Then the verifier Contract to check for these credentials

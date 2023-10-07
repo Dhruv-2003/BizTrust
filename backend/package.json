@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@jpmorganchase/onyx-ssi-sdk": "^0.0.1",
+    "dotenv": "^16.3.1",
+    "ethers": "5.7.2",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Dhruv-2003",
+  "license": "ISC",
+  "description": ""
+}
