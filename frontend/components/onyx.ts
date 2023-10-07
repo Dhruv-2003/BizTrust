@@ -14,8 +14,13 @@ import {
   verifySchema,
   createCredentialFromSchema,
 } from "@jpmorganchase/onyx-ssi-sdk";
+// import { camelCase, includes } from "lodash";
 
-import { ethrProvider, ISSUER_ES256K_PRIVATE_KEY } from "@/config";
+import {
+  ethrProvider,
+  ISSUER_ES256K_PRIVATE_KEY,
+  HOLDER_ES256K_PRIVATE_KEY,
+} from "@/config";
 const didEthr = new EthrDIDMethod(ethrProvider);
 
 // Create a New DID:ethr
@@ -171,4 +176,114 @@ const createAndSignVc = async (HOLDER_ES256K_PUBLIC_KEY: `0x${string}`) => {
   );
 
   console.log(JSON.stringify(vc, null, 2));
+};
+
+// Holder , need to supply the name of VCs, SignedVC JWTs for which the presentation has to be created
+// VPs can be created for single or multiple files
+const createVp = (VC: any[], signedVcJwts: string[]) => {
+  if (VC) {
+    try {
+      console.log("\nReading an existing signed VCs JWT\n");
+      //   const signedVcJwt = fs.readFileSync(
+      //     path.resolve(VC_DIR_PATH, `${camelCase(VC)}.jwt`),
+      //     "utf8"
+      //   );
+      console.log(signedVcJwts);
+
+      console.log("\nGeting User from VC\n");
+      const holderDid = getSubjectFromVP(signedVcJwts[0]);
+      console.log(holderDid);
+
+      console.log("\nGenerating a VP\n");
+      const vp = createPresentation(holderDid!, signedVcJwts);
+      console.log(vp);
+
+      // NOTE: VPs need to be stored
+
+      //   writeToFile(path.resolve(VP_DIR_PATH, `${VC}.json`), JSON.stringify(vp));
+    } catch (err) {
+      console.log("\nFailed to fetch file\n");
+      console.log(
+        "\nTo run this script you must have a valid VC and a valid signed VC JWT\n"
+      );
+      console.log(
+        "\nPlease refer to issuer scripts to generate and sign a VC\n"
+      );
+    }
+  } else {
+    console.log("\nVC not found!\n");
+    console.log(
+      "\nTo run this script you must have a valid VC and a valid signed VC JWT\n"
+    );
+    console.log("\nPlease refer to issuer scripts to generate and sign a VC\n");
+  }
+};
+
+// Holder , need the Holder's DID with Keys , (need to use private Key)
+const signVP = (holderDidWithKeys: DIDWithKeys, token: any) => {
+  const jwtService = new JWTService();
+  return jwtService.signVP(holderDidWithKeys, token);
+};
+
+// Holder
+// need to find a way to get Holder's DID with Keys
+const createAndSignVp = async (VC: any[], signedVcJwts: string[]) => {
+  if (VC) {
+    try {
+      console.log("\nReading existing signed VCs JWT\n");
+      //   const signedVcJwt = fs.readFileSync(
+      //     path.resolve(VC_DIR_PATH, `${camelCase(VC)}.jwt`),
+      //     "utf8"
+      //   );
+      console.log(signedVcJwts);
+
+      console.log("\nGeting User from VC\n");
+      const holderDid = getSubjectFromVP(signedVcJwts[0]);
+      console.log(holderDid);
+
+      if (holderDid?.includes("ethr")) {
+        console.log("VC did method: did:ethr");
+        if (!HOLDER_ES256K_PRIVATE_KEY) {
+          console.log("HOLDER PRIVATE KEY NOT SET");
+          return;
+        }
+
+        const didWithKeys = await didEthr.generateFromPrivateKey(
+          HOLDER_ES256K_PRIVATE_KEY
+        );
+
+        if (didWithKeys.did === holderDid) {
+          console.log("\nCreating and signing the VP from VC\n");
+          const signedVp = await createAndSignPresentationJWT(
+            didWithKeys,
+            signedVcJwts
+          );
+          console.log(signedVp);
+
+          //   writeToFile(
+          //     path.resolve(VP_DIR_PATH, `${VC}.jwt`),
+          //     JSON.stringify(signedVp)
+          //   );
+        } else {
+          console.log(
+            "HOLDER_ES256K_PRIVATE_KEY cannot sign for this verifiable credentail\n"
+          );
+        }
+      }
+    } catch (err) {
+      console.log("\nFailed to fetch file\n");
+      console.log(
+        "\nTo run this script you must have a valid VC and a valid signed VC JWT\n"
+      );
+      console.log(
+        "\nPlease refer to issuer scripts to generate and sign a VC\n"
+      );
+    }
+  } else {
+    console.log("\nVC not found!\n");
+    console.log(
+      "\nTo run this script you must have a valid VC and a valid signed VC JWT\n"
+    );
+    console.log("\nPlease refer to issuer scripts to generate and sign a VC\n");
+  }
 };
