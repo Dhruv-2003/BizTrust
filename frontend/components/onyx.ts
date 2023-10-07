@@ -183,7 +183,7 @@ const createVc = async (
   return vc;
 };
 
-// Issuer Sign a VC , returns JWT
+// Issuer Sign a VC : verifiable Credential type , returns JWT
 const signVc = async (vc: any): Promise<string | undefined> => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
@@ -364,7 +364,13 @@ const createAndSignVp = async (VC: any[], signedVcJwts: string[]) => {
 };
 
 // verify
-const verify = async (VP: any, signedVpJwt: string) => {
+// Name of the VP
+// Signed vp JWT
+// Can return status of each type of verificationStatus
+const verifyVPJwt = async (
+  VP: any,
+  signedVpJwt: string
+): Promise<boolean | undefined> => {
   // Instantiating the didResolver
   const didResolver = getSupportedResolvers([didEthr]);
 
@@ -410,13 +416,14 @@ const verify = async (VP: any, signedVpJwt: string) => {
               console.log("\nVC JWT is Valid\n");
 
               console.log("\nDecoding VC\n");
-
+              // TODO: NOT Sure
               const vc = jwtService.decodeJWT(vcJwt)?.payload as JwtPayload;
               console.log(vc);
 
               try {
                 const vcVerified = await verifyDIDs(vcJwt, didResolver);
                 console.log(`\nVerification status: ${vcVerified}\n`);
+
                 if (vcVerified) {
                   console.log("\nVerifying subject data with schema\n");
                   // the 2nd param has to be true in case the location if local
@@ -432,19 +439,26 @@ const verify = async (VP: any, signedVpJwt: string) => {
                   );
                   console.log(`\nRevocation status: ${revocationStatus}\n`);
                 } else {
+                  return;
                 }
               } catch (error) {
+                return;
                 console.log(error);
               }
             } else {
               console.log("Invalid VC JWT");
+              return;
             }
           } catch (error) {
             console.log(error);
+            return;
           }
         });
+
+        return true;
       } else {
         console.log("Invalid VP JWT");
+        return;
       }
     } catch (err) {
       console.log("\nFailed to fetch file\n");
@@ -454,6 +468,7 @@ const verify = async (VP: any, signedVpJwt: string) => {
       console.log(
         "\nPlease refer to issuer scripts to generate and sign a VP\n"
       );
+      return;
     }
   } else {
     console.log("\nVP not found!\n");
@@ -461,7 +476,8 @@ const verify = async (VP: any, signedVpJwt: string) => {
       "\nTo run this script you must have a valid VP and a valid signed VP JWT\n"
     );
     console.log("\nPlease refer to issuer scripts to generate and sign a VP\n");
+    return;
   }
 };
 
-export { createVc, signVc, createAndSignVc };
+export { createVc, signVc, createAndSignVc, verifyVPJwt };
