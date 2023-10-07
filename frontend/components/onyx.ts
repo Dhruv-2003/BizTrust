@@ -58,7 +58,7 @@ const createVc = async (
   VC_SCHEMA_URL: string,
   subjectData: any,
   credentialType: string
-) => {
+): Promise<string | undefined> => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
     return;
@@ -140,7 +140,8 @@ const createVc = async (
     additionalParams
   );
 
-  console.log(JSON.stringify(vc, null, 2));
+  const result = JSON.stringify(vc, null, 2);
+  console.log(result);
 
   // store the vc Credential
   // store the VC DID keys
@@ -149,13 +150,14 @@ const createVc = async (
   //     path.resolve(VC_DIR_PATH, `${camelCase(credentialType)}.json`),
   //     JSON.stringify(vc, null, 2)
   //   );
+  return vc;
 };
 
 // Issuer Sign a VC , returns JWT
-const signVc = async (vc: any) => {
+const signVc = async (vc: any): Promise<string | undefined> => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
-    return;
+    return 
   }
 
   const issuerDidWithKeys = await didEthr.generateFromPrivateKey(
