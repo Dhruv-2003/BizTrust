@@ -24,9 +24,9 @@ const Onboard = () => {
   );
 
   const particle = new ParticleAuthModule.ParticleNetwork({
-    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-    clientKey: process.env.NEXT_PUBLIC_ClIENT_KEY,
-    appId: process.env.NEXT_PUBLIC_SERVER_KEY,
+    projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
+    clientKey: process.env.NEXT_PUBLIC_ClIENT_KEY as string,
+    appId: process.env.NEXT_PUBLIC_SERVER_KEY as string,
     wallet: {
       displayWalletEntry: true,
       defaultWalletEntryPosition: ParticleAuthModule.WalletEntryPosition.BR,
@@ -35,13 +35,13 @@ const Onboard = () => {
 
   const bundler: IBundler = new Bundler({
     bundlerUrl:
-      "https://bundler.biconomy.io/api/v2/{80001}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
+      "https://bundler.biconomy.io/api/v2/80001/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
     chainId: ChainId.POLYGON_MUMBAI,
     entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
   });
 
   const paymaster: IPaymaster = new BiconomyPaymaster({
-    paymasterUrl: process.env.NEXT_PUBLIC_PAYMASTER_URL,
+    paymasterUrl: process.env.NEXT_PUBLIC_PAYMASTER_URL as string,
   });
 
   const connect = async () => {
@@ -79,9 +79,90 @@ const Onboard = () => {
 
   return (
     <div>
-      {!loading && !address && <button onClick={connect}>Connect</button>}
+      {/* {!loading && !address && <button onClick={connect}>Connect</button>}
       {loading && <p>Loading Smart Account...</p>}
-      {address && <h2>Smart Account: {address}</h2>}
+      {address && <h2>Smart Account: {address}</h2>} */}
+      <div className="w-screen">
+        <div className="flex justify-center mx-auto mt-6">
+          <div className="border border-gray-300 w-2/3 px-10 py-6 rounded-xl shadow-xl">
+            <div className="flex flex-col">
+              <div className="flex justify-start">
+                <p className="text-3xl font-semibold text-gray-800">
+                  Business Details
+                </p>
+              </div>
+              <div className="mt-6">
+                <div className="flex justify-between w-full">
+                  <div>
+                    <p className="text-2xl text-gray-700 font-semibold">
+                      Basic Details
+                    </p>
+                  </div>
+                  <div>
+                    <div className="flex flex-col justify-start">
+                      <div>
+                        <p className="font-semibold">Company Name</p>
+                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
+                      </div>
+                      <div>
+                        <p className="font-semibold mt-8">Company Address</p>
+                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr className="mt-6" />
+              </div>
+              <div className="mt-6">
+                <div className="flex justify-between w-full">
+                  <div>
+                    <p className="text-2xl text-gray-700 font-semibold">
+                      Contact Details
+                    </p>
+                  </div>
+                  <div>
+                    <div className="flex flex-col justify-start">
+                      <div>
+                        <p className="font-semibold">Contact Mail</p>
+                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr className="mt-6" />
+              </div>
+              <div className="mt-6">
+                <div className="flex justify-between w-full">
+                  <div>
+                    <p className="text-2xl w-5/6 text-gray-700 font-semibold">
+                      Tax and Registration Details
+                    </p>
+                  </div>
+                  <div>
+                    <div className="flex flex-col justify-start">
+                      <div>
+                        <p className="font-semibold">Tax Number</p>
+                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
+                      </div>
+                      <div>
+                        <p className="font-semibold mt-8">
+                          Registration Number
+                        </p>
+                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-10 flex justify-end">
+                <button className="px-16 py-2 bg-blue-500 text-white rounded-xl text-lg font-semibold cursor-pointer hover:scale-105 duration-300 hover:bg-white border border-white hover:border-blue-500 hover:text-blue-500">
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
