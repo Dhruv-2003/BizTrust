@@ -15,6 +15,7 @@ import {
   createCredentialFromSchema,
   verifyCredentialJWT,
   verifyRevocationStatus,
+  SchemaManager,
 } from "@jpmorganchase/onyx-ssi-sdk";
 // import { camelCase, includes } from "lodash";
 
@@ -51,7 +52,12 @@ const createDidEthr = async () => {
 };
 
 // Issuer Create a VC , returns VC
-const createVc = async (HOLDER_ES256K_PUBLIC_KEY: `0x${string}`) => {
+const createVc = async (
+  HOLDER_ES256K_PUBLIC_KEY: `0x${string}`,
+  SCHEMA_FILE: string,
+  subjectData: any,
+  credentialType: string
+) => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
     return;
@@ -80,11 +86,33 @@ const createVc = async (HOLDER_ES256K_PUBLIC_KEY: `0x${string}`) => {
 
   const vcDidKey = vcDidwithKey.did;
 
-  const credentialType = "PROOF_OF_NAME";
+  // const credentialType = "PROOF_OF_NAME";
 
-  const subjectData = {
-    name: "Jessie Doe",
-  };
+  // define the Subject Data
+  // const subjectData = {
+  //   name: "Jessie Doe",
+  // };
+
+  // define the schema files first
+  const schema = await SchemaManager.getSchemaFromFile(SCHEMA_FILE);
+
+  const validation: any = await SchemaManager.validateCredentialSubject(
+    subjectData,
+    schema
+  );
+
+  // NOTE : In Case the Schema is online
+  // const schema = await SchemaManager.getSchemaRemote(SCHEMA_URL);
+
+  // const validation: any = await SchemaManager.validateCredentialSubject(
+  //   subjectData,
+  //   schema
+  // );
+
+  if (!validation) {
+    console.log("Schema validation failed");
+    return;
+  }
 
   //vc id, expirationDate, credentialStatus, credentialSchema, etc
   const additionalParams = {
@@ -100,6 +128,15 @@ const createVc = async (HOLDER_ES256K_PUBLIC_KEY: `0x${string}`) => {
     [credentialType],
     additionalParams
   );
+
+  // const vc = await createCredentialFromSchema(
+  //   VC_SCHEMA_URL,
+  //   issuerDidWithKeys.did,
+  //   holderDid,
+  //   subjectData,
+  //   credentialType,
+  //   additionalParams
+  // );
 
   console.log(JSON.stringify(vc, null, 2));
 
@@ -348,6 +385,7 @@ const verify = async (VP: any, signedVpJwt: string) => {
                 console.log(`\nVerification status: ${vcVerified}\n`);
                 if (vcVerified) {
                   console.log("\nVerifying subject data with schema\n");
+                  // the 2nd param has to be true in case the location if local
                   const isSubjectDataValid = verifySchema(vcJwt, false);
                   console.log(
                     `\nSubject data schema verification status: ${isSubjectDataValid}\n`
