@@ -13,6 +13,7 @@ specifiers:
   '@types/react': ^18
   '@types/react-dom': ^18
   autoprefixer: ^10
+  axios: ^1.5.1
   dotenv: ^16.3.1
   eslint: ^8
   eslint-config-next: 13.5.4
@@ -35,6 +36,7 @@ dependencies:
   '@biconomy/particle-auth': 3.1.0
   '@biconomy/paymaster': 3.1.0_typescript@5.2.2
   '@jpmorganchase/onyx-ssi-sdk': 0.0.1_32qqpmfgecqpvkyl7rycgohfkq
+  axios: 1.5.1
   dotenv: 16.3.1
   ethers: 5.7.2
   lodash: 4.17.21
