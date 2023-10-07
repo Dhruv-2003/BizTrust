@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-assign-module-variable */
 import {
   DIDWithKeys,
   EthrDIDMethod,
@@ -103,6 +104,7 @@ const createVc = async (
 
   // NOTE : In Case the Schema is online
   const schema = await SchemaManager.getSchemaRemote(VC_SCHEMA_URL);
+  console.log(schema);
 
   const validation: any = await SchemaManager.validateCredentialSubject(
     subjectData,

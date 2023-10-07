@@ -6,6 +6,7 @@ const nextConfig = {
 
     return config;
   },
+  transpilePackages: ["@jpmorganchase/onyx-ssi-sdk"],
 };
 
 module.exports = nextConfig;
