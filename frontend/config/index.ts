@@ -21,6 +21,12 @@ export const CHAIN_ID = parseInt(getParam("CHAIN_ID")!);
 export const NETWORK_NAME = getParam("NETWORK_NAME");
 export const REGISTRY_CONTRACT_ADDRESS = getParam("REGISTRY_CONTRACT_ADDRESS");
 
+export const PROOF_OF_REGISTERATION = "proofOfRegisteration";
+export const PROOF_OF_TAX = "proofOfTax";
+export const TRUST_SCORE = "trustScore";
+export const VERIFIED_CUSTOMER = "verifiedCustomer";
+export const TRUST_SCORE_CREDENTIAL = "trustScoreCredential";
+
 export const provider = new ethers.providers.JsonRpcProvider(NETWORK_RPC_URL!);
 export const ethrProvider = {
   name: NETWORK_NAME!,
