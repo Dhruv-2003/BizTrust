@@ -23,9 +23,17 @@ export const REGISTRY_CONTRACT_ADDRESS = getParam("REGISTRY_CONTRACT_ADDRESS");
 
 export const PROOF_OF_REGISTERATION = "proofOfRegisteration";
 export const PROOF_OF_TAX = "proofOfTax";
-export const TRUST_SCORE = "trustScore";
 export const VERIFIED_CUSTOMER = "verifiedCustomer";
 export const TRUST_SCORE_CREDENTIAL = "trustScoreCredential";
+
+export const SCHEMA_PROOF_OF_REGISTERATION =
+  "https://github.com/Dhruv-2003/BizTrust/blob/main/frontend/schemas/proofOfRegisteration.json";
+export const SCHEMA_PROOF_OF_TAX =
+  "https://github.com/Dhruv-2003/BizTrust/blob/main/frontend/schemas/proofOfTax.json";
+export const SCHEMA_VERIFIED_CUSTOMER =
+  "https://github.com/Dhruv-2003/BizTrust/blob/main/frontend/schemas/verifiedCustomer.json";
+export const SCHEMA_TRUST_SCORE_CREDENTIAL =
+  "https://github.com/Dhruv-2003/BizTrust/blob/main/frontend/schemas/trustScoreCredential.json";
 
 export const provider = new ethers.providers.JsonRpcProvider(NETWORK_RPC_URL!);
 export const ethrProvider = {
