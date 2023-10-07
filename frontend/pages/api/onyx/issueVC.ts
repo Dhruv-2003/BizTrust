@@ -18,14 +18,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | Error>
 ) {
-  const address = "0x898d0DBd5850e086E6C09D2c83A26Bb5F1ff8C33";
+  const holderAddress = req.body.address;
+  const schemaURL = req.body.schemaURL;
+  const subjectData = req.body.subjectData;
+  const credentialType = req.body.credentialType;
 
   try {
     const vc = await createVc(
-      address,
-      SCHEMA_VERIFIED_CUSTOMER,
-      { name: "Dhruv Agarwal" },
-      VERIFIED_CUSTOMER
+      holderAddress,
+      schemaURL,
+      subjectData,
+      credentialType
     );
 
     if (!vc) {

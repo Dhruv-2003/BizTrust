@@ -17,6 +17,10 @@ import {
   verifyCredentialJWT,
   verifyRevocationStatus,
   SchemaManager,
+  PROOF_OF_ADDRESS,
+  PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_ADDRESS,
 } from "@jpmorganchase/onyx-ssi-sdk";
 // import { camelCase, includes } from "lodash";
 
@@ -25,9 +29,35 @@ import {
   ISSUER_ES256K_PRIVATE_KEY,
   HOLDER_ES256K_PRIVATE_KEY,
   JwtPayload,
+  PROOF_OF_REGISTERATION,
+  SCHEMA_PROOF_OF_REGISTERATION,
+  SCHEMA_PROOF_OF_TAX,
+  SCHEMA_VERIFIED_CUSTOMER,
+  SCHEMA_TRUST_SCORE_CREDENTIAL,
+  VERIFIED_CUSTOMER,
+  TRUST_SCORE_CREDENTIAL,
+  PROOF_OF_TAX,
 } from "@/config";
 const didEthr = new EthrDIDMethod(ethrProvider);
 const jwtService = new JWTService();
+
+export const SchemaURL = {
+  SCHEMA_PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_ADDRESS,
+  SCHEMA_PROOF_OF_REGISTERATION,
+  SCHEMA_PROOF_OF_TAX,
+  SCHEMA_VERIFIED_CUSTOMER,
+  SCHEMA_TRUST_SCORE_CREDENTIAL,
+};
+
+export const CredentialType = {
+  PROOF_OF_ADDRESS,
+  PROOF_OF_NAME,
+  PROOF_OF_REGISTERATION,
+  PROOF_OF_TAX,
+  VERIFIED_CUSTOMER,
+  TRUST_SCORE_CREDENTIAL,
+};
 
 // Create a New DID:ethr
 const createDidEthr = async () => {
@@ -157,7 +187,7 @@ const createVc = async (
 const signVc = async (vc: any): Promise<string | undefined> => {
   if (!ISSUER_ES256K_PRIVATE_KEY) {
     console.log("ISSUER PRIVATE KEY NOT SET");
-    return 
+    return;
   }
 
   const issuerDidWithKeys = await didEthr.generateFromPrivateKey(
