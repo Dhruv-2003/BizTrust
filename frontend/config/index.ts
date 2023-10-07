@@ -43,6 +43,7 @@ export const ethrProvider = {
   registry: REGISTRY_CONTRACT_ADDRESS!,
   gasSource: "",
 };
+
 export interface JwtPayload {
   [key: string]: any;
   iss?: string | undefined;

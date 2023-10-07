@@ -54,7 +54,7 @@ const createDidEthr = async () => {
 // Issuer Create a VC , returns VC
 const createVc = async (
   HOLDER_ES256K_PUBLIC_KEY: `0x${string}`,
-  SCHEMA_FILE: string,
+  VC_SCHEMA_URL: string,
   subjectData: any,
   credentialType: string
 ) => {
@@ -93,21 +93,21 @@ const createVc = async (
   //   name: "Jessie Doe",
   // };
 
-  // define the schema files first
-  const schema = await SchemaManager.getSchemaFromFile(SCHEMA_FILE);
-
-  const validation: any = await SchemaManager.validateCredentialSubject(
-    subjectData,
-    schema
-  );
-
-  // NOTE : In Case the Schema is online
-  // const schema = await SchemaManager.getSchemaRemote(SCHEMA_URL);
+  // // define the schema files first
+  // const schema = await SchemaManager.getSchemaFromFile(SCHEMA_FILE);
 
   // const validation: any = await SchemaManager.validateCredentialSubject(
   //   subjectData,
   //   schema
   // );
+
+  // NOTE : In Case the Schema is online
+  const schema = await SchemaManager.getSchemaRemote(VC_SCHEMA_URL);
+
+  const validation: any = await SchemaManager.validateCredentialSubject(
+    subjectData,
+    schema
+  );
 
   if (!validation) {
     console.log("Schema validation failed");
@@ -121,22 +121,22 @@ const createVc = async (
 
   console.log(`\nGenerating Verifiable Credential of type ${credentialType}\n`);
 
-  const vc = createCredential(
-    issuerDidWithKeys.did,
-    holderDid,
-    subjectData,
-    [credentialType],
-    additionalParams
-  );
-
-  // const vc = await createCredentialFromSchema(
-  //   VC_SCHEMA_URL,
+  // const vc = createCredential(
   //   issuerDidWithKeys.did,
   //   holderDid,
   //   subjectData,
-  //   credentialType,
+  //   [credentialType],
   //   additionalParams
   // );
+
+  const vc = await createCredentialFromSchema(
+    VC_SCHEMA_URL,
+    issuerDidWithKeys.did,
+    holderDid,
+    subjectData,
+    credentialType,
+    additionalParams
+  );
 
   console.log(JSON.stringify(vc, null, 2));
 
@@ -429,3 +429,5 @@ const verify = async (VP: any, signedVpJwt: string) => {
     console.log("\nPlease refer to issuer scripts to generate and sign a VP\n");
   }
 };
+
+export { createVc, signVc, createAndSignVc };
