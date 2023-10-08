@@ -8,6 +8,7 @@ Company
     Contact No. ,
     Tax Number ,
     Registeration Number ,
+    TrustScore ,
     Issued VCs - Id (Nested Database)
     Issued VPs - Id (Nested Database)
     paymentHistory - Id (Nested )
