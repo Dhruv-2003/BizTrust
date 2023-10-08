@@ -3,6 +3,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import Overview from "@/components/overview";
 import PaymentsHistory from "@/components/paymentsHistory";
 import Invoice from "@/components/invoice";
+import VP from "@/components/vp";
 
 const Dashboard = () => {
   return (
@@ -23,7 +24,7 @@ const Dashboard = () => {
                     <Overview />
                   </TabPanel>
                   <TabPanel>
-                    <p>two!</p>
+                    <VP/>
                   </TabPanel>
                   <TabPanel>
                     <PaymentsHistory />

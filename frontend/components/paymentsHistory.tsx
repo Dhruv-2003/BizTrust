@@ -7,6 +7,7 @@ import {
   AccordionIcon,
   Box,
 } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
 
 const PaymentsHistory = () => {
   return (
@@ -135,4 +136,4 @@ const PaymentsHistory = () => {
   );
 };
 
-export default PaymentsHistory;
+export default dynamic(() => Promise.resolve(PaymentsHistory), { ssr: false });
