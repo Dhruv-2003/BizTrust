@@ -148,7 +148,7 @@ const VP = (props: any) => {
 
   return (
     <div>
-      <div className="bg-slate-100 h-screen">
+      <div className="bg-slate-100 h-full">
         <div className="mt-10">
           <div className="w-5/6 bg-white px-10 py-6 flex flex-col mx-auto rounded-xl">
             <div>
