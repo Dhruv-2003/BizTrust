@@ -11,7 +11,7 @@ import cryptoJS from "crypto-js";
 import { addVC, addVP } from "@/firebase/methods";
 
 export const createIssueVC = async (
-  address: `0x${string}`,
+  address: string,
   schemaURL: string,
   subjectData: {},
   credentialType: string,

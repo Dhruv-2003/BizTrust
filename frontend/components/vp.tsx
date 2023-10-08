@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { getVPs } from "@/firebase/methods";
+import { createIssueVC, createVP, verifyVP } from "./onyxMethods";
+import {
+  CredentialType,
+  PresentationCredentials,
+  PresentationType,
+  SchemaURL,
+} from "./onyx";
 
 const VP = (props: any) => {
+  const [encryptionKey, setEncryptionKey] = useState<string>();
   const [VPs, setVPs] = useState<any[]>();
   const address = props.address;
 
@@ -28,6 +36,41 @@ const VP = (props: any) => {
 
     // We also have types to be inferred from the name of the Payload
     setVPs(data);
+  };
+
+  const generateEntityVP = () => {
+    if (!encryptionKey) {
+      console.log("ENCRYPTION KEY NOT PROVIDED");
+      return;
+    }
+    // create VP for PROOF of entity
+    createVP(
+      address,
+      PresentationType.PROOF_OF_ENTITY,
+      PresentationCredentials.PROOF_OF_ENTITY,
+      encryptionKey
+    );
+    // Verify the VP
+    verifyVP(PresentationType.PROOF_OF_ENTITY, encryptionKey);
+
+    // issue verified VC
+    createIssueVC(
+      address,
+      SchemaURL.SCHEMA_VERIFIED_CUSTOMER,
+      {
+        name,
+      },
+      CredentialType.VERIFIED_CUSTOMER,
+      encryptionKey
+    );
+  };
+
+  const generateVerifiedVP = () => {
+    // take the Proof OF Verified Customer VC
+    // create VP
+    // verify VP
+    // update Verification Status in Firebase
+    //
   };
   return (
     <div>

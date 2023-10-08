@@ -41,6 +41,7 @@ const Onboard = () => {
     taxNo: "",
     regNo: "",
   });
+
   const [continu, setContinu] = useState<boolean>(false);
 
   useEffect(() => {
@@ -101,17 +102,39 @@ const Onboard = () => {
 
   const createCompany = async () => {
     // check data
+    const compAddress = `${properties.address}, ${properties.city}, ${properties.state}, ${properties.country} - ${properties.zip}`;
 
+    console.log(
+      address,
+      properties.compname,
+      compAddress,
+      properties.mail,
+      properties.taxNo,
+      properties.regNo
+    );
     // add data to Firebase first
-    await addNewCompany();
+    // await addNewCompany(
+    //   address,
+    //   properties.compname,
+    //   compAddress,
+    //   properties.mail,
+    //   properties.taxNo,
+    //   properties.regNo
+    // );
   };
 
-  const issueOnboardindVCs = async () => {
+  const issueOnboardingVCs = async () => {
+    // check Data
+    if (!encryptionKey) {
+      console.log("ENCRYPTION NOT SET");
+      return;
+    }
+
     await createIssueVC(
       address,
       SchemaURL.SCHEMA_PROOF_OF_NAME,
       {
-        name,
+        name: properties.compname,
       },
       CredentialType.PROOF_OF_NAME,
       encryptionKey
@@ -121,12 +144,12 @@ const Onboard = () => {
       address,
       SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
       {
-        name,
-        address,
-        city,
-        state,
-        country,
-        zip,
+        name: properties.compname,
+        address: properties.address,
+        city: properties.city,
+        state: properties.state,
+        country: properties.country,
+        zip: properties.zip,
       },
       CredentialType.PROOF_OF_ADDRESS,
       encryptionKey
@@ -136,8 +159,8 @@ const Onboard = () => {
       address,
       SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
       {
-        name,
-        registeration_no,
+        name: properties.compname,
+        registeration_no: properties.regNo,
       },
       CredentialType.PROOF_OF_REGISTERATION,
       encryptionKey
@@ -147,8 +170,8 @@ const Onboard = () => {
       address,
       SchemaURL.SCHEMA_PROOF_OF_TAX,
       {
-        name,
-        tax_no,
+        name: properties.compname,
+        tax_no: properties.taxNo,
       },
       CredentialType.PROOF_OF_TAX,
       encryptionKey
@@ -157,7 +180,7 @@ const Onboard = () => {
 
   return (
     <div>
-      {/* {!loading && !address && <button onClick={connect}>Connect</button>}
+      {!loading && !address && <button onClick={connect}>Connect</button>}
       {loading && <p>Loading Smart Account...</p>}
       {address && <h2>Smart Account: {address}</h2>}
 
@@ -167,7 +190,7 @@ const Onboard = () => {
           address={address}
           provider={provider}
         />
-      )} */}
+      )}
 
       <div className="w-screen">
         <div className="flex justify-center mx-auto mt-6">
@@ -218,12 +241,20 @@ const Onboard = () => {
                       className="px-3 py-2 rounded-lg bg-gray-100 mt-6 w-40 text-xl text-center mx-auto "
                       placeholder="@ @ @ @"
                       type="number"
+                      onChange={(e) => {
+                        setEncryptionKey(e.target.value.toString());
+                      }}
                     ></input>
                     <p className="mt-2 text-xs text-slate-500 text-center w-80 mx-auto">
                       This passcode must be only 4 numbers and remember it to
                       further use it for verifying your identity.
                     </p>
-                    <button className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
+                    <button
+                      className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl"
+                      onClick={() => {
+                        issueOnboardingVCs();
+                      }}
+                    >
                       Set
                     </button>
                   </div>
@@ -235,7 +266,12 @@ const Onboard = () => {
                   >
                     Back
                   </button>
-                  <button className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl">
+                  <button
+                    className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl"
+                    onClick={() => {
+                      createCompany();
+                    }}
+                  >
                     Finish
                   </button>
                 </div>

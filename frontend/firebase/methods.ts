@@ -27,6 +27,14 @@ export const addNewCompany = async (
     trustScore: 500,
     invoicesIssued: [],
     invoicesToPay: [],
+    isVerified: false,
+  });
+};
+
+export const verifyCompany = async (address: `0x${string}`) => {
+  const docsRef = doc(db, "Companies", `${address}`);
+  await updateDoc(docsRef, {
+    isVerified: true,
   });
 };
 
