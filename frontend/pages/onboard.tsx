@@ -24,6 +24,18 @@ const Onboard = () => {
     null
   );
   const [magicLink, setMagicLink] = useState<any>();
+  const [properties, setProperties] = useState({
+    compname: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    zip: "",
+    mail: "",
+    taxNo: "",
+    regNo: "",
+  });
+  const [continu, setContinu] = useState<boolean>(false);
 
   useEffect(() => {
     if (!magicLink) {
@@ -83,7 +95,7 @@ const Onboard = () => {
 
   return (
     <div>
-      {!loading && !address && <button onClick={connect}>Connect</button>}
+      {/* {!loading && !address && <button onClick={connect}>Connect</button>}
       {loading && <p>Loading Smart Account...</p>}
       {address && <h2>Smart Account: {address}</h2>}
 
@@ -93,87 +105,247 @@ const Onboard = () => {
           address={address}
           provider={provider}
         />
-      )}
+      )} */}
 
       <div className="w-screen">
         <div className="flex justify-center mx-auto mt-6">
-          <div className="border border-gray-300 w-2/3 px-10 py-6 rounded-xl shadow-xl">
-            <div className="flex flex-col">
-              <div className="flex justify-start">
-                <p className="text-3xl font-semibold text-gray-800">
-                  Business Details
-                </p>
-              </div>
-              <div className="mt-6">
-                <div className="flex justify-between w-full">
-                  <div>
-                    <p className="text-2xl text-gray-700 font-semibold">
-                      Basic Details
+          {continu ? (
+            <div className="border border-gray-300 w-2/3 px-10 py-6 rounded-xl shadow-xl">
+              <div className="flex flex-col">
+                <div className="flex justify-start">
+                  <p className="text-3xl font-semibold text-gray-800">
+                    Generate Verifications
+                  </p>
+                </div>
+                <div className="mt-10">
+                  <div className="flex flex-col">
+                    <p className="text-xl text-black font-semibold">
+                      Generate Proof of Registration
                     </p>
-                  </div>
-                  <div>
-                    <div className="flex flex-col justify-start">
-                      <div>
-                        <p className="font-semibold">Company Name</p>
-                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
-                      </div>
-                      <div>
-                        <p className="font-semibold mt-8">Company Address</p>
-                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
-                      </div>
-                    </div>
+                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
+                      Generate
+                    </button>
                   </div>
                 </div>
-                <hr className="mt-6" />
-              </div>
-              <div className="mt-6">
-                <div className="flex justify-between w-full">
-                  <div>
-                    <p className="text-2xl text-gray-700 font-semibold">
-                      Contact Details
+                <div className="mt-10">
+                  <div className="flex flex-col">
+                    <p className="text-xl text-black font-semibold">
+                      Generate Proof of Registration
                     </p>
-                  </div>
-                  <div>
-                    <div className="flex flex-col justify-start">
-                      <div>
-                        <p className="font-semibold">Contact Mail</p>
-                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
-                      </div>
-                    </div>
+                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
+                      Generate
+                    </button>
                   </div>
                 </div>
-                <hr className="mt-6" />
-              </div>
-              <div className="mt-6">
-                <div className="flex justify-between w-full">
-                  <div>
-                    <p className="text-2xl w-5/6 text-gray-700 font-semibold">
-                      Tax and Registration Details
+                <div className="mt-10">
+                  <div className="flex flex-col">
+                    <p className="text-xl text-black font-semibold">
+                      Generate Proof of Registration
                     </p>
-                  </div>
-                  <div>
-                    <div className="flex flex-col justify-start">
-                      <div>
-                        <p className="font-semibold">Tax Number</p>
-                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
-                      </div>
-                      <div>
-                        <p className="font-semibold mt-8">
-                          Registration Number
-                        </p>
-                        <input className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"></input>
-                      </div>
-                    </div>
+                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
+                      Generate
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div className="mt-10 flex justify-end">
-                <button className="px-16 py-2 bg-blue-500 text-white rounded-xl text-lg font-semibold cursor-pointer hover:scale-105 duration-300 hover:bg-white border border-white hover:border-blue-500 hover:text-blue-500">
-                  Continue
-                </button>
+                <div className="mt-10">
+                  <div className="flex flex-col">
+                    <p className="text-xl text-black font-semibold">
+                      Set PassCode
+                    </p>
+                    <input
+                      className="px-3 py-2 rounded-lg bg-gray-100 mt-6 w-40 text-xl text-center mx-auto "
+                      placeholder="@ @ @ @"
+                      type="number"
+                    ></input>
+                    <p className="mt-2 text-xs text-slate-500 text-center w-80 mx-auto">
+                      This passcode must be only 4 numbers and remember it to
+                      further use it for verifying your identity.
+                    </p>
+                    <button className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
+                      Set
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="border border-gray-300 w-2/3 px-10 py-6 rounded-xl shadow-xl">
+              <div className="flex flex-col">
+                <div className="flex justify-start">
+                  <p className="text-3xl font-semibold text-gray-800">
+                    Business Details
+                  </p>
+                </div>
+                <div className="mt-6">
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <p className="text-2xl text-gray-700 font-semibold">
+                        Basic Details
+                      </p>
+                    </div>
+                    <div>
+                      <div className="flex flex-col justify-start">
+                        <div>
+                          <p className="font-semibold">Company Name</p>
+                          <input
+                            onChange={(e) =>
+                              setProperties({
+                                ...properties,
+                                compname: e.target.value,
+                              })
+                            }
+                            value={properties.compname}
+                            className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"
+                          ></input>
+                        </div>
+                        <div>
+                          <p className="font-semibold mt-8">Company Address</p>
+                          <div className="flex flex-col">
+                            <div className="flex">
+                              <input
+                                onChange={(e) =>
+                                  setProperties({
+                                    ...properties,
+                                    address: e.target.value,
+                                  })
+                                }
+                                value={properties.address}
+                                className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-60 text-xl"
+                                placeholder="address"
+                              ></input>
+                              <input
+                                onChange={(e) =>
+                                  setProperties({
+                                    ...properties,
+                                    city: e.target.value,
+                                  })
+                                }
+                                value={properties.city}
+                                className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-960 text-xl mx-3"
+                                placeholder="city"
+                              ></input>
+                            </div>
+                            <div className="flex">
+                              <input
+                                onChange={(e) =>
+                                  setProperties({
+                                    ...properties,
+                                    state: e.target.value,
+                                  })
+                                }
+                                value={properties.state}
+                                className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-40 text-xl"
+                                placeholder="state"
+                              ></input>
+                              <input
+                                onChange={(e) =>
+                                  setProperties({
+                                    ...properties,
+                                    country: e.target.value,
+                                  })
+                                }
+                                value={properties.country}
+                                className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-40 text-xl mx-3"
+                                placeholder="country"
+                              ></input>
+                              <input
+                                onChange={(e) =>
+                                  setProperties({
+                                    ...properties,
+                                    zip: e.target.value,
+                                  })
+                                }
+                                value={properties.zip}
+                                className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-40 text-xl"
+                                placeholder="zip"
+                              ></input>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr className="mt-6" />
+                </div>
+                <div className="mt-6">
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <p className="text-2xl text-gray-700 font-semibold">
+                        Contact Details
+                      </p>
+                    </div>
+                    <div>
+                      <div className="flex flex-col justify-start">
+                        <div>
+                          <p className="font-semibold">Contact Mail</p>
+                          <input
+                            onChange={(e) =>
+                              setProperties({
+                                ...properties,
+                                mail: e.target.value,
+                              })
+                            }
+                            value={properties.mail}
+                            className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"
+                          ></input>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr className="mt-6" />
+                </div>
+                <div className="mt-6">
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <p className="text-2xl w-5/6 text-gray-700 font-semibold">
+                        Tax and Registration Details
+                      </p>
+                    </div>
+                    <div>
+                      <div className="flex flex-col justify-start">
+                        <div>
+                          <p className="font-semibold">Tax Number</p>
+                          <input
+                            onChange={(e) =>
+                              setProperties({
+                                ...properties,
+                                taxNo: e.target.value,
+                              })
+                            }
+                            value={properties.taxNo}
+                            className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"
+                          ></input>
+                        </div>
+                        <div>
+                          <p className="font-semibold mt-8">
+                            Registration Number
+                          </p>
+                          <input
+                            onChange={(e) =>
+                              setProperties({
+                                ...properties,
+                                regNo: e.target.value,
+                              })
+                            }
+                            value={properties.regNo}
+                            className="px-3 py-2 rounded-lg bg-gray-100 mt-2 w-96 text-xl"
+                          ></input>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-10 flex justify-end">
+                  <button
+                    onClick={() => setContinu(true)}
+                    className="px-16 py-2 bg-blue-500 text-white rounded-xl text-lg font-semibold cursor-pointer hover:scale-105 duration-300 hover:bg-white border border-white hover:border-blue-500 hover:text-blue-500"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
