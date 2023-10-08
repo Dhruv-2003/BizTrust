@@ -29,10 +29,15 @@ Presentation : https://pitch.com/public/970b826a-facc-4d3d-a614-c03d178a3d27
 ## For Nerds
 
 **Signing Up**: We sign up users using magic link and Biconomy Bundler and Paymaster,which creates a smart contract account for the user. Once it is created, we generate session keys for the user, so they don't have to sign transactions again and again.
+
 **Onboarding**: We onboard companies by simply taking their details like name, addrs, taxNo., RegistrationNo., etc. and store it in firebase(for now). Once it is stored we allow the user to generate verifiable credentials and create a passcode whichis stored in an encrypted formed in the local  will later be used to verify thier credentials.
+
 **OverView**: Here, the user can see thier VC and company details and their Trust Score.
+
 **Invoice**: Here, the user can the invoices that are created for them and pay them using Biconomy Gasless Transactions and can even create invoices for other business that they deal with to reuest payments.
+
 **Transactions**: Here, user can see all past payments.
+
 **VPs**: User can generate VPs here using the Onyx SSI SDK, that ensures more creditibility to the company, and can be used easily to provide a proof to recieve payments.
 
 ## Images
