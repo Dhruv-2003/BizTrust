@@ -6,6 +6,7 @@ import Invoice from "@/components/invoice";
 import VP from "@/components/vp";
 
 const Dashboard = () => {
+  const address = ""; // get the user connected address
 
   return (
     <div className="w-screen">

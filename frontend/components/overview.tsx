@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { getVCs } from "@/firebase/methods";
-import { getCompanyInfo } from "@/firebase/methods";
+import { getVCs, getCompanyInfo } from "@/firebase/methods";
 
 const Overview = (props: any) => {
   const [VCs, setVCs] = useState<any[]>();
@@ -11,6 +10,12 @@ const Overview = (props: any) => {
   useEffect(() => {
     if (address) {
       getInfo(address);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    if (address) {
+      getVCsInfo(address);
     }
   }, [address]);
 
@@ -27,14 +32,7 @@ const Overview = (props: any) => {
     //   invoicesToPay: [],
     // }
     // Data will come in this way , just display as you need to and pass on the rest to the corresponding components
-    setUserData(data)
   };
-
-  useEffect(() => {
-    if (address) {
-      getVCsInfo(address);
-    }
-  }, [address]);
 
   const getVCsInfo = async (address: `0x${string}`) => {
     const data = await getVCs(address);

@@ -17,7 +17,7 @@ export const createIssueVC = async (
   credentialType: string,
   encryptionKey: string
 ) => {
-  fetch("/api/onyx/issueVC", {
+  await fetch("/api/onyx/issueVC", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

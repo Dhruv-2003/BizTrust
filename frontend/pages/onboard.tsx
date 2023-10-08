@@ -18,8 +18,20 @@ import { createIssueVC } from "@/components/onyxMethods";
 import { CredentialType, SchemaURL } from "@/components/onyx";
 import { async } from "@firebase/util";
 import { addNewCompany } from "@/firebase/methods";
+import { useRouter } from "next/router";
 
 const Onboard = () => {
+  const router = useRouter();
+  const [address, setAddress] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [smartAccount, setSmartAccount] =
+    useState<BiconomySmartAccountV2 | null>(null);
+  const [provider, setProvider] = useState<ethers.providers.Provider | null>(
+    null
+  );
+
+  const [encryptionKey, setEncryptionKey] = useState<string>();
+  const [magicLink, setMagicLink] = useState<any>();
   const [properties, setProperties] = useState({
     compname: "",
     address: "",
@@ -31,63 +43,158 @@ const Onboard = () => {
     taxNo: "",
     regNo: "",
   });
+
   const [continu, setContinu] = useState<boolean>(false);
 
-  const issueOnboardindVCs = async () => {
+  useEffect(() => {
+    if (!magicLink) {
+      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
+        network: {
+          rpcUrl: "https://rpc-mumbai.maticvigil.com",
+          chainId: 80001,
+        },
+      });
+      setMagicLink(magic);
+    }
+  }, []);
 
-    await addNewCompany(address,properties.compname,properties.address,properties.mail,properties.taxNo,properties.regNo);
+  const bundler: IBundler = new Bundler({
+    bundlerUrl:
+      "https://bundler.biconomy.io/api/v2/80001/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
+    chainId: ChainId.POLYGON_MUMBAI,
+    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+  });
 
-    await createIssueVC(
+  const paymaster: IPaymaster = new BiconomyPaymaster({
+    paymasterUrl: process.env.NEXT_PUBLIC_PAYMASTER_URL as string,
+  });
+
+  const connect = async () => {
+    try {
+      setLoading(true);
+      await magicLink.wallet.connectWithUI();
+      const web3Provider = new ethers.providers.Web3Provider(
+        magicLink.rpcProvider,
+        "any"
+      );
+      setProvider(web3Provider);
+
+      const module = await ECDSAOwnershipValidationModule.create({
+        signer: web3Provider.getSigner(),
+        moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
+      });
+
+      let biconomySmartAccount = await BiconomySmartAccountV2.create({
+        chainId: ChainId.POLYGON_MUMBAI,
+        bundler: bundler,
+        paymaster: paymaster,
+        entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+        defaultValidationModule: module,
+        activeValidationModule: module,
+      });
+
+      const address = await biconomySmartAccount.getAccountAddress();
+      setSmartAccount(biconomySmartAccount);
+      setAddress(address);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createCompany = async () => {
+    // check data
+    const compAddress = `${properties.address}, ${properties.city}, ${properties.state}, ${properties.country} - ${properties.zip}`;
+    console.log(
       address,
-      SchemaURL.SCHEMA_PROOF_OF_NAME,
-      {
-        name,
-      },
-      CredentialType.PROOF_OF_NAME,
-      encryptionKey
+      properties.compname,
+      compAddress,
+      properties.mail,
+      properties.taxNo,
+      properties.regNo
+    );
+    // add data to Firebase first
+    await addNewCompany(
+      address,
+      properties.compname,
+      compAddress,
+      properties.mail,
+      properties.taxNo,
+      properties.regNo
     );
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
-      {
-        name,
+    router.push("/dashboard");
+  };
+
+  const issueOnboardingVCs = async () => {
+    // check Data
+    if (!encryptionKey) {
+      console.log("ENCRYPTION NOT SET");
+      return;
+    }
+    // console.log(
+    //   address,
+    // );
+
+    // console.log(properties)
+
+    // console.log(encryptionKey)
+
+    try {
+      await createIssueVC(
         address,
-        city,
-        state,
-        country,
-        zip,
-      },
-      CredentialType.PROOF_OF_ADDRESS,
-      encryptionKey
-    );
+        SchemaURL.SCHEMA_PROOF_OF_NAME,
+        {
+          name: properties.compname,
+        },
+        CredentialType.PROOF_OF_NAME,
+        encryptionKey
+      );
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
-      {
-        name,
-        registeration_no,
-      },
-      CredentialType.PROOF_OF_REGISTERATION,
-      encryptionKey
-    );
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
+        {
+          name: properties.compname,
+          address: properties.address,
+          city: properties.city,
+          state: properties.state,
+          country: properties.country,
+          zip: properties.zip,
+        },
+        CredentialType.PROOF_OF_ADDRESS,
+        encryptionKey
+      );
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_TAX,
-      {
-        name,
-        tax_no,
-      },
-      CredentialType.PROOF_OF_TAX,
-      encryptionKey
-    );
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
+        {
+          name: properties.compname,
+          registeration_no: properties.regNo,
+        },
+        CredentialType.PROOF_OF_REGISTERATION,
+        encryptionKey
+      );
+
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_TAX,
+        {
+          name: properties.compname,
+          tax_no: properties.taxNo,
+        },
+        CredentialType.PROOF_OF_TAX,
+        encryptionKey
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div>
-      {/* {!loading && !address && <button onClick={connect}>Connect</button>}
+      {!loading && !address && <button onClick={connect}>Connect</button>}
       {loading && <p>Loading Smart Account...</p>}
       {address && <h2>Smart Account: {address}</h2>}
 
@@ -97,7 +204,7 @@ const Onboard = () => {
           address={address}
           provider={provider}
         />
-      )} */}
+      )}
 
       <div className="w-screen">
         <div className="flex justify-center mx-auto mt-6">
@@ -123,41 +230,31 @@ const Onboard = () => {
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-slate-500 font-semibold">
-                        Address
-                      </p>
+                      <p className="text-slate-500 font-semibold">Address</p>
                       <p className="text-black font-semibold mt-1 text-lg">
                         {properties.address}
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-slate-500 font-semibold">
-                        City
-                      </p>
+                      <p className="text-slate-500 font-semibold">City</p>
                       <p className="text-black font-semibold mt-1 text-lg">
                         {properties.city}
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-slate-500 font-semibold">
-                        state
-                      </p>
+                      <p className="text-slate-500 font-semibold">state</p>
                       <p className="text-black font-semibold mt-1 text-lg">
                         {properties.state}
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-slate-500 font-semibold">
-                        Country
-                      </p>
+                      <p className="text-slate-500 font-semibold">Country</p>
                       <p className="text-black font-semibold mt-1 text-lg">
                         {properties.country}
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-slate-500 font-semibold">
-                        Zip Code
-                      </p>
+                      <p className="text-slate-500 font-semibold">Zip Code</p>
                       <p className="text-black font-semibold mt-1 text-lg">
                         {properties.zip}
                       </p>
@@ -171,9 +268,7 @@ const Onboard = () => {
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-slate-500 font-semibold">
-                        Tax No.
-                      </p>
+                      <p className="text-slate-500 font-semibold">Tax No.</p>
                       <p className="text-black font-semibold mt-1 text-lg">
                         {properties.taxNo}
                       </p>
@@ -188,16 +283,7 @@ const Onboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-10">
-                  <div className="flex flex-col">
-                    <p className="text-xl text-black font-semibold">
-                      Generate Proof of Registration
-                    </p>
-                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
-                      Generate
-                    </button>
-                  </div>
-                </div>
+
                 <div className="mt-10">
                   <div className="flex flex-col">
                     <p className="text-xl text-black font-semibold">
@@ -205,6 +291,9 @@ const Onboard = () => {
                     </p>
                     <input
                       className="px-3 py-2 rounded-lg bg-gray-100 mt-6 w-40 text-xl text-center mx-auto "
+                      onChange={(e) => {
+                        setEncryptionKey(e.target.value.toString());
+                      }}
                       placeholder="* * * *"
                       type="password"
                     ></input>
@@ -212,8 +301,28 @@ const Onboard = () => {
                       This passcode must be only 4 numbers and remember it to
                       further use it for verifying your identity.
                     </p>
-                    <button className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
+                    {/* <button
+                      className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl"
+                      onClick={() => {
+                        issueOnboardingVCs();
+                      }}
+                    >
                       Set
+                    </button> */}
+                  </div>
+                </div>
+                <div className="mt-10">
+                  <div className="flex flex-col">
+                    <p className="text-xl text-black font-semibold">
+                      Generate Proof of Registration
+                    </p>
+                    <button
+                      className="px-5 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl "
+                      onClick={() => {
+                        issueOnboardingVCs();
+                      }}
+                    >
+                      Generate
                     </button>
                   </div>
                 </div>
@@ -224,7 +333,12 @@ const Onboard = () => {
                   >
                     Back
                   </button>
-                  <button onClick={() => issueOnboardindVCs()} className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl">
+                  <button
+                    className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl"
+                    onClick={() => {
+                      createCompany();
+                    }}
+                  >
                     Finish
                   </button>
                 </div>
