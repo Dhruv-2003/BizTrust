@@ -2,7 +2,7 @@ import Image from "next/image";
 import onyx from "../public/onyx.jpeg";
 import bico from "../public/biconomy.png";
 import magic from "../public/magic.png";
-import zk from "../public/zk.svg";
+import visa from "../public/visa.png";
 import React, { useEffect, useState } from "react";
 import {
   ECDSAOwnershipValidationModule,
@@ -131,7 +131,7 @@ export default function Home() {
                   <Image src={onyx} alt="" height={100} />
                   <Image src={bico} alt="" height={60} width={90} />
                   <Image src={magic} alt="" height={100} />
-                  <Image src={zk} alt="" height={100} />
+                  <Image src={visa} alt="" height={100} />
                 </div>
               </div>
             </div>

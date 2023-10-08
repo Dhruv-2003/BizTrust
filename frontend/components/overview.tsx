@@ -5,7 +5,9 @@ import { getVCs, getCompanyInfo } from "@/firebase/methods";
 const Overview = (props: any) => {
   const [VCs, setVCs] = useState<any[]>();
   const [userData, setUserData] = useState<any>();
-  const address = props.address; // get the user connected address
+  const address = props.address;
+  // get the user connected address
+  const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
     if (address) {
@@ -108,7 +110,10 @@ const Overview = (props: any) => {
                   {VCs &&
                     VCs.map((data) => {
                       return (
-                        <div className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
+                        <div
+                          onClick={() => setShow(true)}
+                          className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300"
+                        >
                           <div className="flex flex-col mt-2">
                             <div>
                               <p className="text-white text-xl font-semibold">
@@ -124,6 +129,18 @@ const Overview = (props: any) => {
                               </p>
                               <p className="text-white text-md font-semibold mt-1">
                                 {data.issuanceDate}
+                              </p>
+                            </div>
+                            <div className="mt-6">
+                              <p className="text-white text-xl font-semibold">
+                                VC Details
+                              </p>
+                              <p className="text-white text-sm font-semibold">
+                                {data.type}
+                                {data.id}
+                                {data.credentialStatus}
+                                {data.evidence}
+                                {data.expirationDate}
                               </p>
                             </div>
                           </div>
