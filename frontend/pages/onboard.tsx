@@ -14,6 +14,10 @@ import {
 import { Wallet, providers, ethers } from "ethers";
 import { ChainId } from "@biconomy/core-types";
 import { Magic } from "magic-sdk";
+import { createIssueVC } from "@/components/onyxMethods";
+import { CredentialType, SchemaURL } from "@/components/onyx";
+import { async } from "@firebase/util";
+import { addNewCompany } from "@/firebase/methods";
 
 const Onboard = () => {
   const [address, setAddress] = useState<string>("");
@@ -23,6 +27,8 @@ const Onboard = () => {
   const [provider, setProvider] = useState<ethers.providers.Provider | null>(
     null
   );
+
+  const [encryptionKey, setEncryptionKey] = useState<string>();
   const [magicLink, setMagicLink] = useState<any>();
 
   useEffect(() => {
@@ -79,6 +85,62 @@ const Onboard = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const createCompany = async () => {
+    // check data
+
+    // add data to Firebase first
+    await addNewCompany();
+  };
+
+  const issueOnboardindVCs = async () => {
+    await createIssueVC(
+      address,
+      SchemaURL.SCHEMA_PROOF_OF_NAME,
+      {
+        name,
+      },
+      CredentialType.PROOF_OF_NAME,
+      encryptionKey
+    );
+
+    await createIssueVC(
+      address,
+      SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
+      {
+        name,
+        address,
+        city,
+        state,
+        country,
+        zip,
+      },
+      CredentialType.PROOF_OF_ADDRESS,
+      encryptionKey
+    );
+
+    await createIssueVC(
+      address,
+      SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
+      {
+        name,
+        registeration_no,
+      },
+      CredentialType.PROOF_OF_REGISTERATION,
+      encryptionKey
+    );
+
+    await createIssueVC(
+      address,
+      SchemaURL.SCHEMA_PROOF_OF_TAX,
+      {
+        name,
+        tax_no,
+      },
+      CredentialType.PROOF_OF_TAX,
+      encryptionKey
+    );
   };
 
   return (

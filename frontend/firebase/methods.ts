@@ -8,7 +8,6 @@ import {
   updateDoc,
 } from "@firebase/firestore";
 import { db } from "./firebaseConfig";
-import G from "glob";
 
 export const addNewCompany = async (
   address: `0x${string}`,

@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { getVPs } from "@/firebase/methods";
 
-const VP = () => {
+const VP = (props: any) => {
+  const [VPs, setVPs] = useState<any[]>();
+  const address = props.address;
+
+  useEffect(() => {
+    if (address) {
+      getVPsInfo(address);
+    }
+  }, [address]);
+
+  const getVPsInfo = async (address: `0x${string}`) => {
+    const data = await getVPs(address);
+    // array of Vps
+    // type PresentationPayload {
+    //   '@context': string | string[]
+    //   type: string | string[]
+    //   id?: string
+    //   verifiableCredential?: VerifiableCredential[]
+    //   holder: string
+    //   verifier?: string | string[]
+    //   issuanceDate?: string
+    //   expirationDate?: string
+    // }
+
+    // We also have types to be inferred from the name of the Payload
+    setVPs(data);
+  };
   return (
     <div>
       <div className="bg-slate-100 h-screen">

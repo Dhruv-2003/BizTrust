@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -8,8 +8,32 @@ import {
   Box,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
+import { getTxs } from "@/firebase/methods";
 
-const PaymentsHistory = () => {
+const PaymentsHistory = (props: any) => {
+  const [txs, setTxs] = useState<any[]>();
+  const address = props.address;
+
+  useEffect(() => {
+    if (address) {
+      getTxsInfo(address);
+    }
+  }, [address]);
+
+  const getTxsInfo = async (address: `0x${string}`) => {
+    const data = await getTxs(address);
+    // array of Txs
+    // interface txObjectType {
+    //   to: `0x${string}`;
+    //   timestamp: string;
+    //   SuccesStatus: boolean;
+    //   FeesPaid: string;
+    //   Amount: number;
+    // }
+
+    // We also have types to be inferred from the name of the Payload
+    setTxs(data);
+  };
   return (
     <div>
       <div className="bg-slate-100 h-screen">
