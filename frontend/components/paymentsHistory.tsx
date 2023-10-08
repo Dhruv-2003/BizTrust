@@ -106,7 +106,7 @@ const PaymentsHistory = (props: any) => {
                     );
                   })}
 
-                {/* <AccordionItem className="mt-3">
+                <AccordionItem className="mt-3">
                   <h2>
                     <AccordionButton>
                       <div className="w-full flex justify-between">
@@ -120,7 +120,7 @@ const PaymentsHistory = (props: any) => {
                           <p className="text-md font-semibold text-neutral-400">
                             Time Stamp
                           </p>
-                          <p className="font-semibold mt-1">11:19 11-12-2020</p>
+                          <p className="font-semibold mt-1">11:19 7-10-2023</p>
                         </div>
                         <AccordionIcon />
                       </div>
@@ -158,7 +158,7 @@ const PaymentsHistory = (props: any) => {
                       </div>
                     </div>
                   </AccordionPanel>
-                </AccordionItem> */}
+                </AccordionItem>
               </Accordion>
             </div>
           </div>

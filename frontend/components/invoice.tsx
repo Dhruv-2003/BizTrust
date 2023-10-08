@@ -58,7 +58,28 @@ const Invoice = () => {
                   <div className="mt-6">
                     <div>
                       <p className="text-md font-semibold">Reciepent Address</p>
-                      <input className="mt-3 px-3 py-3 rounded-lg bg-slate-200 w-full text-black"></input>
+                      {/* <input className="mt-3 px-3 py-3 rounded-lg bg-slate-200 w-full text-black"></input> */}
+                      <form className="">
+                        <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                          Search
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          </div>
+                          <input
+                            type="search"
+                            id="default-search"
+                            className="mt-3 px-3 py-3 rounded-lg bg-slate-200 w-full text-black"
+                            required
+                          />
+                          <button
+                            type="submit"
+                            className="text-white absolute right-2.5 bottom-1.5 bg-blue-500 font-medium rounded-lg text-sm px-4 py-2"
+                          >
+                            Search
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                   <div className="mt-6">
