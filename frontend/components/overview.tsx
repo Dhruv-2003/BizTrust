@@ -1,4 +1,5 @@
 import React from "react";
+import dynamic from "next/dynamic";
 
 const Overview = () => {
   return (
@@ -187,4 +188,4 @@ const Overview = () => {
   );
 };
 
-export default Overview;
+export default dynamic(() => Promise.resolve(Overview), { ssr: false });
