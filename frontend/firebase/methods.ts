@@ -38,6 +38,16 @@ export const verifyCompany = async (address: `0x${string}`) => {
   });
 };
 
+export const updateTrustScore = async (
+  address: `0x${string}`,
+  newScore: number
+) => {
+  const docsRef = doc(db, "Companies", `${address}`);
+  await updateDoc(docsRef, {
+    trustScore: newScore,
+  });
+};
+
 export const addVC = async (
   address: `0x${string}`,
   credentialType: string,
@@ -79,6 +89,22 @@ export const addVP = async (
     `${presentationType}`
   );
   await setDoc(docsRef, vpObject);
+};
+
+export const getVP = async (
+  address: `0x${string}`,
+  presentationType: string
+) => {
+  const docsRef = doc(
+    db,
+    "Companies",
+    `${address}`,
+    "IssuedVPs",
+    `${presentationType}`
+  );
+  const docSnap = await getDoc(docsRef);
+  const data = docSnap.data();
+  return data;
 };
 
 export const getVPs = async (address: `0x${string}`): Promise<{}[]> => {

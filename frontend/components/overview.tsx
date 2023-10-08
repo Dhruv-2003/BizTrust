@@ -110,10 +110,10 @@ const Overview = (props: any) => {
                           <div className="flex flex-col mt-2">
                             <div>
                               <p className="text-white text-xl font-semibold">
-                                Proof of Name
+                                {data.type[1]}
                               </p>
                               <p className="text-white text-md font-semibold mt-1">
-                                {data.type}
+                                {/* {data.type[1]} */}
                               </p>
                             </div>
                             <div className="mt-8">

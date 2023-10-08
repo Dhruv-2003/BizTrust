@@ -102,7 +102,7 @@ export const createVP = async (
   //   "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MjgzNzc1NTcsInZwIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vd3d3LnczLm9yZy8yMDE4L2NyZWRlbnRpYWxzL3YxIl0sInR5cGUiOlsiVmVyaWZpYWJsZVByZXNlbnRhdGlvbiJdLCJ2ZXJpZmlhYmxlQ3JlZGVudGlhbCI6WyJleUpoYkdjaU9pSkZVekkxTmtzaUxDSjBlWEFpT2lKS1YxUWlmUS5leUoyWXlJNmV5SkFZMjl1ZEdWNGRDSTZXeUpvZEhSd2N6b3ZMM2QzZHk1M015NXZjbWN2TWpBeE9DOWpjbVZrWlc1MGFXRnNjeTkyTVNKZExDSjBlWEJsSWpwYklsWmxjbWxtYVdGaWJHVkRjbVZrWlc1MGFXRnNJaXdpZG1WeWFXWnBaV1JEZFhOMGIyMWxjaUpkTENKamNtVmtaVzUwYVdGc1UzVmlhbVZqZENJNmV5SnVZVzFsSWpvaVJHaHlkWFlnUVdkaGNuZGhiQ0o5TENKamNtVmtaVzUwYVdGc1UyTm9aVzFoSWpwN0ltbGtJam9pYUhSMGNITTZMeTlqWkc0dWFuTmtaV3hwZG5JdWJtVjBMMmRvTDBSb2NuVjJMVEl3TURNdlFtbDZWSEoxYzNRdlpuSnZiblJsYm1RdmMyTm9aVzFoY3k5MlpYSnBabWxsWkVOMWMzUnZiV1Z5TG1wemIyNGlMQ0owZVhCbElqb2lTbk52YmxOamFHVnRZVlpoYkdsa1lYUnZjakl3TVRnaWZYMHNJbk4xWWlJNkltUnBaRHBsZEdoeU9tMWhkR2xqYlhWdE9qQjRPRGs0WkRCRVFtUTFPRFV3WlRBNE5rVTJRekE1UkRKak9ETkJNalpDWWpWR01XWm1PRU16TXlJc0ltcDBhU0k2SW1ScFpEcGxkR2h5T20xaGRHbGpiWFZ0T2pCNFltWmxPVE16UW1KRk16TTVOR1l6UW1VeVlqUkRRek5HTkRBelpURmpPV1V4UTBOQlFXVTVaaUlzSW01aVppSTZNVFk1TmpjME9Ua3hNaXdpYVhOeklqb2laR2xrT21WMGFISTZiV0YwYVdOdGRXMDZNSGcyTWtNME16TXlNelEwTnpnNU9XRmpZall4UXpFNE1UZ3haVE0wTVRZNE9UQXpSVEF6TTBKbUluMC5GcUpIeTBuc3dlM1BVVzFpMUZkalA2RWlQQjRhaTJpWkY3bWFKX0hVQmM4ZlBhV0pHc2gzVFd2TUJGTjBYZm93bjNqQ2JpbTdweFJDeHoteVVqMW50USJdfSwianRpIjoiZGlkOmV0aHI6bWF0aWNtdW06MHhCMDk2QTE2Y0NjNjZDMUZhQTkxNUMwMTM0ZDAyYTE3NjlhODBGNzc2IiwibmJmIjoxNjk2NzU1MTU4LCJpc3MiOiJkaWQ6ZXRocjpudWxsOjB4ODk4ZDBEQmQ1ODUwZTA4NkU2QzA5RDJjODNBMjZCYjVGMWZmOEMzMyJ9.bUGkrvxyzpCuEdQB1KXoxudxNwZ4pZuZk9FpCTddhbXoXClBsL7tzZ8ep9D-NsCw0_I4L7LZc4785UdtJ_2qpA";
 };
 
-export const verifyVP = (VP: string, encryptionKey: string) => {
+export const verifyVP = async (VP: string, encryptionKey: string) => {
   const encryptedJWT = secureLocalStorage.getItem(VP) as string;
   if (!encryptedJWT) {
     console.log("JWT NOT FOUND");
@@ -113,7 +113,7 @@ export const verifyVP = (VP: string, encryptionKey: string) => {
   const jwt = encodedData.toString(cryptoJS.enc.Utf8);
   console.log(jwt);
   if (jwt) {
-    fetch("/api/onyx/verifyVP", {
+    const result = await fetch("/api/onyx/verifyVP", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,12 @@ export const verifyVP = (VP: string, encryptionKey: string) => {
         const data = await response.json();
         // get the returned
         console.log(data);
+        return data.isVerified;
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return result;
   }
 };
