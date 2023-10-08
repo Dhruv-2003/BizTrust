@@ -19,6 +19,8 @@ import { CredentialType, SchemaURL } from "@/components/onyx";
 import { async } from "@firebase/util";
 import { addNewCompany } from "@/firebase/methods";
 import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Onboard = () => {
   const router = useRouter();
@@ -122,6 +124,16 @@ const Onboard = () => {
       properties.taxNo,
       properties.regNo
     );
+    toast.success(`Success! Company Added`, {
+      position: "top-right",
+      autoClose: 18000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
     router.push("/dashboard");
   };
@@ -151,6 +163,17 @@ const Onboard = () => {
         encryptionKey
       );
 
+      toast.success(`Success! Proof of Name Created`, {
+        position: "top-right",
+        autoClose: 18000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
       await createIssueVC(
         address,
         SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
@@ -166,6 +189,17 @@ const Onboard = () => {
         encryptionKey
       );
 
+      toast.success(`Success! Proof of Address Created`, {
+        position: "top-right",
+        autoClose: 18000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
       await createIssueVC(
         address,
         SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
@@ -177,6 +211,17 @@ const Onboard = () => {
         encryptionKey
       );
 
+      toast.success(`Success! Proof of Registration Created`, {
+        position: "top-right",
+        autoClose: 18000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
       await createIssueVC(
         address,
         SchemaURL.SCHEMA_PROOF_OF_TAX,
@@ -187,6 +232,17 @@ const Onboard = () => {
         CredentialType.PROOF_OF_TAX,
         encryptionKey
       );
+
+      toast.success(`Success! Proof of Tax Created`, {
+        position: "top-right",
+        autoClose: 18000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -194,7 +250,7 @@ const Onboard = () => {
 
   return (
     <div>
-      {!loading && !address && <button onClick={connect}>Connect</button>}
+      {/* {!loading && !address && <button onClick={connect}>Connect</button>}
       {loading && <p>Loading Smart Account...</p>}
       {address && <h2>Smart Account: {address}</h2>}
 
@@ -204,7 +260,20 @@ const Onboard = () => {
           address={address}
           provider={provider}
         />
-      )}
+      )} */}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
 
       <div className="w-screen">
         <div className="flex justify-center mx-auto mt-6">
