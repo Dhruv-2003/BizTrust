@@ -106,6 +106,7 @@ const VP = (props: any) => {
     await verifyCompany(address);
 
     // prompt user to claim new VC for verifing
+    generateTrustScoreVC("600");
   };
 
   const handleTrustScore = () => {};
@@ -304,7 +305,7 @@ const VP = (props: any) => {
               <button
                 className="w-full text-start px-10 py-4 bg-white hover:scale-105 duration-300 rounded-xl border border-gray-300"
                 onClick={() => {
-                  generateTrustScoreVC();
+                  generateTrustScoreVP();
                 }}
               >
                 <div className="flex justify-between">
@@ -333,7 +334,7 @@ const VP = (props: any) => {
               <button
                 className="w-full text-start px-10 py-4 bg-white hover:scale-105 duration-300 rounded-xl border border-gray-300"
                 onClick={() => {
-                  generateTrustScoreVC();
+                  handleTrustScore();
                 }}
               >
                 <div className="flex justify-between">

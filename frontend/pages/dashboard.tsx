@@ -56,6 +56,7 @@ const Dashboard = () => {
                     <VP
                       address={address}
                       name={data ? data?.Name : "ABC Company"}
+                      trustScore={data ? data.trustScore : "500"}
                     />
                   </TabPanel>
                   <TabPanel>
