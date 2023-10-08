@@ -228,6 +228,17 @@ const Onboard = () => {
                     </button>
                   </div>
                 </div>
+                <div className="mt-7 flex justify-between w-full">
+                  <button
+                    onClick={() => setContinu(false)}
+                    className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-red-300 text-xl font-semibold hover:scale-105 duration-300 to-red-500 text-white rounded-xl"
+                  >
+                    Back
+                  </button>
+                  <button className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl">
+                    Finish
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
