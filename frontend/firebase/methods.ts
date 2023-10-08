@@ -1,6 +1,8 @@
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -44,6 +46,19 @@ export const addVC = async (
   await setDoc(docsRef, vcObject);
 };
 
+export const getVCs = async (address: `0x${string}`): Promise<{}[]> => {
+  let VCs: {}[] = [];
+  const colRef = collection(db, "Companies", `${address}`, "IssuedVCs");
+  const querySnapshot = await getDocs(colRef);
+
+  querySnapshot.forEach((doc) => {
+    VCs.push(doc.data());
+    // console.log(doc.id, " => ", doc.data());
+  });
+
+  return VCs;
+};
+
 export const addVP = async (
   address: `0x${string}`,
   presentationType: string,
@@ -57,6 +72,19 @@ export const addVP = async (
     `${presentationType}`
   );
   await setDoc(docsRef, vpObject);
+};
+
+export const getVPs = async (address: `0x${string}`): Promise<{}[]> => {
+  let VPs: {}[] = [];
+  const colRef = collection(db, "Companies", `${address}`, "IssuedVPs");
+  const querySnapshot = await getDocs(colRef);
+
+  querySnapshot.forEach((doc) => {
+    VPs.push(doc.data());
+    // console.log(doc.id, " => ", doc.data());
+  });
+
+  return VPs;
 };
 
 interface txObjectType {
@@ -74,6 +102,19 @@ export const addTransaction = async (
 ) => {
   const docsRef = doc(db, "Companies", `${address}`, "transactions", `${txId}`);
   await setDoc(docsRef, txObject);
+};
+
+export const getTxs = async (address: `0x${string}`): Promise<{}[]> => {
+  let txs: {}[] = [];
+  const colRef = collection(db, "Companies", `${address}`, "transactions");
+  const querySnapshot = await getDocs(colRef);
+
+  querySnapshot.forEach((doc) => {
+    txs.push(doc.data());
+    // console.log(doc.id, " => ", doc.data());
+  });
+
+  return txs;
 };
 
 interface invoiceObjectType {
