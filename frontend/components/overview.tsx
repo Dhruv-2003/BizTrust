@@ -4,7 +4,14 @@ import { getVCs, getCompanyInfo } from "@/firebase/methods";
 
 const Overview = (props: any) => {
   const [VCs, setVCs] = useState<any[]>();
-  const address = props.address;
+  const [userData, setUserData] = useState<any>();
+  const address = ""; // get the user connected address
+
+  useEffect(() => {
+    if (address) {
+      getInfo(address);
+    }
+  }, [address]);
 
   useEffect(() => {
     if (address) {
@@ -58,21 +65,21 @@ const Overview = (props: any) => {
                   Company Name
                 </p>
                 <p className="text-2xl text-black font-semibold mt-1">
-                  BizTrust
+                  {userData && userData.Name}
                 </p>
               </div>
               <div>
                 <p className="text-md font-semibold text-neutral-400">
                   Company Tax No.
                 </p>
-                <p className="text-2xl text-black font-semibold mt-1">E14536</p>
+                <p className="text-2xl text-black font-semibold mt-1"> {userData && userData.TaxNo}</p>
               </div>
               <div>
                 <p className="text-md font-semibold text-neutral-400">
                   Company Registration No.
                 </p>
                 <p className="text-2xl text-black font-semibold mt-1">
-                  Biz3748
+                {userData && userData.RegNo}
                 </p>
               </div>
               <div>
@@ -80,7 +87,7 @@ const Overview = (props: any) => {
                   Verification Status
                 </p>
                 <p className="text-2xl text-green-500 font-semibold mt-1">
-                  Verified
+                  {userData && userData.RegNo}
                 </p>
               </div>
             </div>
@@ -198,7 +205,7 @@ const Overview = (props: any) => {
                     </div>
                     <div className="mt-7">
                       <p className="font-semibold text-green-500 text-3xl">
-                        720
+                        {userData && userData.trustScore}
                       </p>
                     </div>
                     <div className="mt-8">
@@ -225,7 +232,7 @@ const Overview = (props: any) => {
                           Company Address
                         </p>
                         <p className="font-semibold text-lg mt-1">
-                          B-522, Zurich, Switzerland
+                          {userData && userData.Address}
                         </p>
                       </div>
                       <div>
@@ -233,7 +240,7 @@ const Overview = (props: any) => {
                           Company Mail
                         </p>
                         <p className="font-semibold text-lg mt-1">
-                          biztrust.contact@gmail.com
+                          {userData && userData.ContactMail}
                         </p>
                       </div>
                     </div>

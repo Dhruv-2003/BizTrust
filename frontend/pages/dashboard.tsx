@@ -50,7 +50,7 @@ const Dashboard = () => {
               <div className="bg-slate-100 w-full">
                 <TabPanels>
                   <TabPanel>
-                    <Overview address={address} />
+                    <Overview/>
                   </TabPanel>
                   <TabPanel>
                     <VP
@@ -60,7 +60,7 @@ const Dashboard = () => {
                     />
                   </TabPanel>
                   <TabPanel>
-                    <PaymentsHistory address={address} />
+                    <PaymentsHistory />
                   </TabPanel>
                   <TabPanel>
                     <Invoice />
