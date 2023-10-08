@@ -9,6 +9,7 @@ const getParam = (name: string) => {
     console.error(`\nConfig param '${name}' missing\n`);
     return null;
   }
+  // console.log(param);
   return param;
 };
 
@@ -21,10 +22,14 @@ export const CHAIN_ID = parseInt(getParam("CHAIN_ID")!);
 export const NETWORK_NAME = getParam("NETWORK_NAME");
 export const REGISTRY_CONTRACT_ADDRESS = getParam("REGISTRY_CONTRACT_ADDRESS");
 
-export const PROOF_OF_REGISTERATION = "ProofOfRegisteration";
-export const PROOF_OF_TAX = "ProofOfTax";
-export const VERIFIED_CUSTOMER = "VerifiedCustomer";
-export const TRUST_SCORE_CREDENTIAL = "TrustScoreCredential";
+export const PROOF_OF_REGISTERATION = "proofOfRegisteration";
+export const PROOF_OF_TAX = "proofOfTax";
+export const VERIFIED_CUSTOMER = "verifiedCustomer";
+export const TRUST_SCORE_CREDENTIAL = "trustScoreCredential";
+
+export const PROOF_OF_ENTITY = "ProofOfEntity";
+export const PROOF_OF_VERIFIED_CUSTOMER = "ProofOfVerifiedCustomer";
+export const PROOF_OF_TRUST_SCORE = "ProofOfTrustScore";
 
 export const SCHEMA_PROOF_OF_REGISTERATION =
   "https://cdn.jsdelivr.net/gh/Dhruv-2003/BizTrust/frontend/schemas/proofOfRegisteration.json";

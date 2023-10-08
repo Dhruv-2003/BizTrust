@@ -17,18 +17,23 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | Error>
 ) {
-  const VPname = req.body.VPname;
-  const vpJWT = req.body.vpJWT;
+  if (req.method === "POST") {
+    const VP = req.body.VP;
+    const vpJWT = req.body.vpJWT;
+    console.log(VP, vpJWT);
 
-  try {
-    const result = await verifyVPJwt(VPname, vpJWT);
-    if (!result) {
-      return res.status(400).json({ message: "NO Result returned" });
+    try {
+      const result = await verifyVPJwt(VP, vpJWT);
+      if (!result) {
+        return res.status(400).json({ message: "No Result returned" });
+      }
+
+      res.status(200).json({ isVerified: result });
+    } catch (error) {
+      console.log(error);
+      res.status(400);
     }
-
-    res.status(200).json({ isVerified: result });
-  } catch (error) {
-    console.log(error);
-    res.status(400);
+  } else {
+    return res.status(405).json({ message: "Method Not Allowed" });
   }
 }
