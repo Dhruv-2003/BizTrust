@@ -37,6 +37,9 @@ import {
   VERIFIED_CUSTOMER,
   TRUST_SCORE_CREDENTIAL,
   PROOF_OF_TAX,
+  PROOF_OF_ENTITY,
+  PROOF_OF_TRUST_SCORE,
+  PROOF_OF_VERIFIED_CUSTOMER,
 } from "@/config";
 const didEthr = new EthrDIDMethod(ethrProvider);
 const jwtService = new JWTService();
@@ -57,6 +60,23 @@ export const CredentialType = {
   PROOF_OF_TAX,
   VERIFIED_CUSTOMER,
   TRUST_SCORE_CREDENTIAL,
+};
+
+export const PresentationType = {
+  PROOF_OF_ENTITY,
+  PROOF_OF_TRUST_SCORE,
+  PROOF_OF_VERIFIED_CUSTOMER,
+};
+
+export const PresentationCredentials = {
+  PROOF_OF_ENTITY: [
+    PROOF_OF_NAME,
+    PROOF_OF_ADDRESS,
+    PROOF_OF_REGISTERATION,
+    PROOF_OF_TAX,
+  ],
+  PROOF_OF_TRUST_SCORE: [TRUST_SCORE_CREDENTIAL],
+  PROOF_OF_VERIFIED_CUSTOMER: [VERIFIED_CUSTOMER],
 };
 
 // Create a New DID:ethr
@@ -255,9 +275,20 @@ const createAndSignVc = async (HOLDER_ES256K_PUBLIC_KEY: `0x${string}`) => {
 
 // Holder , need to supply the name of VCs, SignedVC JWTs for which the presentation has to be created
 // VPs can be created for single or multiple files
-const createVp = (VC: any[], signedVcJwts: string[]) => {
+const createVp = async (
+  VC: any[],
+  signedVcJwts: string[]
+): Promise<string | undefined> => {
   if (VC) {
     try {
+      const ethrProvider = {
+        name: process.env.NEXT_PUBLIC_NETWORK_NAME!,
+        chainId: process.env.NEXT_PUBLIC_CHAIN_ID,
+        rpcUrl: process.env.NEXT_PUBLIC_NETWORK_RPC_URL!,
+        registry: process.env.NEXT_PUBLIC_REGISTRY_CONTRACT_ADDRESS!,
+        gasSource: "",
+      };
+      const didEthr = new EthrDIDMethod(ethrProvider);
       console.log("\nReading an existing signed VCs JWT\n");
       //   const signedVcJwt = fs.readFileSync(
       //     path.resolve(VC_DIR_PATH, `${camelCase(VC)}.jwt`),
@@ -269,9 +300,25 @@ const createVp = (VC: any[], signedVcJwts: string[]) => {
       const holderDid = getSubjectFromVP(signedVcJwts[0]);
       console.log(holderDid);
 
+      const oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(new Date().getFullYear() + 1);
+
+      const expirationDate = oneYearFromNow.toISOString();
+
+      const vcDidwithKey = await didEthr.create();
+      console.log(vcDidwithKey);
+
+      const vpOptions = {
+        id: vcDidwithKey.did,
+        issuanceDate: new Date().toISOString(),
+        expirationDate: expirationDate,
+      };
+
       console.log("\nGenerating a VP\n");
-      const vp = createPresentation(holderDid!, signedVcJwts);
+      const vp = createPresentation(holderDid!, signedVcJwts, vpOptions);
       console.log(vp);
+
+      return vp;
 
       // NOTE: VPs need to be stored
 
@@ -284,6 +331,7 @@ const createVp = (VC: any[], signedVcJwts: string[]) => {
       console.log(
         "\nPlease refer to issuer scripts to generate and sign a VC\n"
       );
+      return;
     }
   } else {
     console.log("\nVC not found!\n");
@@ -291,13 +339,29 @@ const createVp = (VC: any[], signedVcJwts: string[]) => {
       "\nTo run this script you must have a valid VC and a valid signed VC JWT\n"
     );
     console.log("\nPlease refer to issuer scripts to generate and sign a VC\n");
+    return;
   }
 };
 
 // Holder , need the Holder's DID with Keys , (need to use private Key)
-const signVP = (holderDidWithKeys: DIDWithKeys, token: any) => {
-  const jwtService = new JWTService();
-  return jwtService.signVP(holderDidWithKeys, token);
+const signVp = async (
+  holderDidWithKeys: DIDWithKeys,
+  vp: any
+): Promise<string | undefined> => {
+  if (holderDidWithKeys) {
+    return jwtService.signVP(holderDidWithKeys, vp);
+  } else {
+    const holderPrivateKey = process.env.NEXT_PUBLIC_HOLDER_ES256K_PRIVATE_KEY;
+    if (!holderPrivateKey) {
+      console.log("HOLDER PRIVATE KEY NOT SET");
+      return;
+    }
+
+    const holderDidWithKeys = await didEthr.generateFromPrivateKey(
+      holderPrivateKey
+    );
+    return jwtService.signVP(holderDidWithKeys, vp);
+  }
 };
 
 // Holder
@@ -480,4 +544,12 @@ const verifyVPJwt = async (
   }
 };
 
-export { createVc, signVc, createAndSignVc, verifyVPJwt };
+export {
+  createVc,
+  signVc,
+  createAndSignVc,
+  verifyVPJwt,
+  createVp,
+  signVp,
+  createAndSignVp,
+};
