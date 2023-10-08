@@ -8,6 +8,11 @@ import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  IHybridPaymaster,
+  SponsorUserOperationDto,
+  PaymasterMode,
+} from "@biconomy/paymaster";
 
 interface props {
   smartAccount: BiconomySmartAccountV2;
@@ -104,6 +109,26 @@ const CreateSession: React.FC<props> = ({
         data: sessionTxData.data,
       };
 
+      let userOp = await smartAccount.buildUserOp([setSessiontrx]);
+
+      const biconomyPaymaster =
+        smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
+      let paymasterServiceData: SponsorUserOperationDto = {
+        mode: PaymasterMode.SPONSORED,
+        smartAccountInfo: {
+          name: "BICONOMY",
+          version: "2.0.0",
+        },
+      };
+      const paymasterAndDataResponse =
+        await biconomyPaymaster.getPaymasterAndData(
+          userOp,
+          paymasterServiceData
+        );
+      userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData;
+
+      userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData;
+
       const transactionArray = [];
 
       if (enableSessionKeyModule) {
@@ -116,9 +141,9 @@ const CreateSession: React.FC<props> = ({
 
       transactionArray.push(setSessiontrx);
 
-      let partialUserOp = await smartAccount.buildUserOp(transactionArray);
+      // let partialUserOp = await smartAccount.buildUserOp(transactionArray);
 
-      const userOpResponse = await smartAccount.sendUserOp(partialUserOp);
+      const userOpResponse = await smartAccount.sendUserOp(userOp);
       console.log(`userOp Hash: ${userOpResponse.userOpHash}`);
       const transactionDetails = await userOpResponse.wait();
       console.log("txHash", transactionDetails.receipt.transactionHash);
