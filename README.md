@@ -2,7 +2,7 @@
 
 BizTrust is a comprehensive solution that seamlessly integrates various technologies to address the challenges inherent in B2B (business-to-business) payments and simplify the onboarding process for businesses. At its core, our solution offers a streamlined, secure, and efficient ecosystem for businesses to engage in digital transactions.
 
-
+Presentation : https://pitch.com/public/970b826a-facc-4d3d-a614-c03d178a3d27
 ## Existing Problems
 
 1. **Transparency Deficiency:** We eliminate the opacity surrounding business identities by issuing verifiable credentials based on company information, addressing the lack of transparency that plagues B2B transactions.
@@ -37,3 +37,16 @@ BizTrust is a comprehensive solution that seamlessly integrates various technolo
 
 ## Images
 
+![WhatsApp Image 2023-10-09 at 1 17 11 AM](https://github.com/Dhruv-2003/BizTrust/assets/90101251/70d62ba5-f7ec-4ce7-a11c-d8b2416ae78e)
+
+![WhatsApp Image 2023-10-09 at 1 17 11 AM (1)](https://github.com/Dhruv-2003/BizTrust/assets/90101251/28d9e4ff-c6c6-4797-9ca3-2a8905a6d6b5)
+
+
+<img width="1434" alt="Screenshot 2023-10-09 at 1 58 36 AM" src="https://github.com/Dhruv-2003/BizTrust/assets/90101251/b44e6591-afa0-47b2-b7ce-6e37f0a3dd5f">
+<img width="1436" alt="Screenshot 2023-10-09 at 1 58 17 AM" src="https://github.com/Dhruv-2003/BizTrust/assets/90101251/91780821-6e3f-4c65-8498-025a2937feff">
+
+![WhatsApp Image 2023-10-09 at 1 59 10 AM](https://github.com/Dhruv-2003/BizTrust/assets/90101251/a1f9075f-2cfb-44f8-a348-ca41f99a5de9)
+
+## Links
+
+Session Key Genaration : https://mumbai.polygonscan.com/tx/0x605079d4e356281916bd25d9c72a785b012180bc2a51356c8bf0cd722a66dcd1
