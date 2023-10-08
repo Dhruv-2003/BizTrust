@@ -1,126 +1,160 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
-import { createVc } from "@/components/onyx";
-
-const inter = Inter({ subsets: ["latin"] });
+import onyx from "../public/onyx.jpeg";
+import bico from "../public/biconomy.png";
+import magic from "../public/magic.png";
+import zk from "../public/zk.svg";
+import React, { useEffect, useState } from "react";
+import {
+  ECDSAOwnershipValidationModule,
+  DEFAULT_ECDSA_OWNERSHIP_MODULE,
+} from "@biconomy/modules";
+import CreateSession from "@/components/CreateSession";
+import { IPaymaster, BiconomyPaymaster } from "@biconomy/paymaster";
+import { IBundler, Bundler } from "@biconomy/bundler";
+import {
+  BiconomySmartAccountV2,
+  DEFAULT_ENTRYPOINT_ADDRESS,
+} from "@biconomy/account";
+import { Wallet, providers, ethers } from "ethers";
+import { ChainId } from "@biconomy/core-types";
+import { Magic } from "magic-sdk";
+import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Home() {
+  const [address, setAddress] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [smartAccount, setSmartAccount] =
+    useState<BiconomySmartAccountV2 | null>(null);
+  const [provider, setProvider] = useState<ethers.providers.Provider | null>(
+    null
+  );
+  const router = useRouter() 
+
+  const [encryptionKey, setEncryptionKey] = useState<string>();
+  const [magicLink, setMagicLink] = useState<any>();
+
+
+  useEffect(() => {
+    if (!magicLink) {
+      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
+        network: {
+          rpcUrl: "https://rpc-mumbai.maticvigil.com",
+          chainId: 80001,
+        },
+      });
+      setMagicLink(magic);
+    }
+  }, []);
+
+  const bundler: IBundler = new Bundler({
+    bundlerUrl:
+      "https://bundler.biconomy.io/api/v2/80001/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
+    chainId: ChainId.POLYGON_MUMBAI,
+    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+  });
+
+  const paymaster: IPaymaster = new BiconomyPaymaster({
+    paymasterUrl: process.env.NEXT_PUBLIC_PAYMASTER_URL as string,
+  });
+
+  const connect = async () => {
+    try {
+      setLoading(true);
+      await magicLink.wallet.connectWithUI();
+      const web3Provider = new ethers.providers.Web3Provider(
+        magicLink.rpcProvider,
+        "any"
+      );
+      setProvider(web3Provider);
+
+      const module = await ECDSAOwnershipValidationModule.create({
+        signer: web3Provider.getSigner(),
+        moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
+      });
+
+      let biconomySmartAccount = await BiconomySmartAccountV2.create({
+        chainId: ChainId.POLYGON_MUMBAI,
+        bundler: bundler,
+        paymaster: paymaster,
+        entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+        defaultValidationModule: module,
+        activeValidationModule: module,
+      });
+
+      const address = await biconomySmartAccount.getAccountAddress();
+      setSmartAccount(biconomySmartAccount);
+      setAddress(address);
+      toast.success(`Success! Account Created: ${address}`, {
+        position: "top-right",
+        autoClose: 18000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setLoading(false);
+      await router.push("/dashboard")
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-          {/* <button
-            onClick={() =>
-             
-            }
-          >
-            Create VC
-          </button> */}
+    <div className="w-screen bg-blue-400">
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      <div className="flex mt-4">
+        <div className="w-3/5 mt-6">
+          <div className="bg-blue-400 h-screen rounded-xl">
+            <div className="mx-20">
+              <p className="text-white font-semibold text-7xl text-center mt-36">
+                Building Trust, Pioneering Business Payment Solutions
+              </p>
+              <div>
+                <p className="mt-10 text-white font-semibold text-xl text-center">
+                  Powered by
+                </p>
+                <div className="flex mt-5 justify-between">
+                  <Image src={onyx} alt="" height={100} />
+                  <Image src={bico} alt="" height={60} width={90} />
+                  <Image src={magic} alt="" height={100} />
+                  <Image src={zk} alt="" height={100} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-2/5 mt-6 mx-5">
+          <div className="bg-white h-screen rounded-xl">
+            <div className="mx-28">
+              <div className="px-10">
+                <p className="text-5xl text-center py-20 font-semibold">
+                  Power you business
+                </p>
+                <p className="text-3xl text-center font-semibold ">
+                  Start With <span className="text-blue-500">BizTrust</span>
+                </p>
+                <button onClick={() => connect()} className="mt-20 mx-auto flex font-semibold text-2xl px-10 py-2 rounded-xl bg-blue-400 text-white hover:scale-105 duration-300 hover:border-blue-500 hover:bg-white hover:text-blue-500 border border-white ">
+                  Create Account
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
