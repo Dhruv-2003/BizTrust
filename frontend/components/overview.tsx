@@ -5,22 +5,19 @@ import { getVCs, getCompanyInfo } from "@/firebase/methods";
 const Overview = (props: any) => {
   const [VCs, setVCs] = useState<any[]>();
   const [userData, setUserData] = useState<any>();
-  const address = ""; // get the user connected address
+  const address = props.address; // get the user connected address
 
   useEffect(() => {
     if (address) {
       getInfo(address);
-    }
-  }, [address]);
-
-  useEffect(() => {
-    if (address) {
       getVCsInfo(address);
     }
   }, [address]);
 
   const getInfo = async (address: `0x${string}`) => {
     const data = await getCompanyInfo(address);
+    console.log(data);
+    setUserData(data);
     // {
     //   Name: name,
     //   Address: companyAddress,
@@ -72,14 +69,17 @@ const Overview = (props: any) => {
                 <p className="text-md font-semibold text-neutral-400">
                   Company Tax No.
                 </p>
-                <p className="text-2xl text-black font-semibold mt-1"> {userData && userData.TaxNo}</p>
+                <p className="text-2xl text-black font-semibold mt-1">
+                  {" "}
+                  {userData && userData.TaxNo}
+                </p>
               </div>
               <div>
                 <p className="text-md font-semibold text-neutral-400">
                   Company Registration No.
                 </p>
                 <p className="text-2xl text-black font-semibold mt-1">
-                {userData && userData.RegNo}
+                  {userData && userData.RegNo}
                 </p>
               </div>
               <div>
@@ -87,7 +87,9 @@ const Overview = (props: any) => {
                   Verification Status
                 </p>
                 <p className="text-2xl text-green-500 font-semibold mt-1">
-                  {userData && userData.RegNo}
+                  {userData && userData.isVerified === true
+                    ? "Verified"
+                    : "Not Verified"}
                 </p>
               </div>
             </div>

@@ -339,7 +339,7 @@ const VP = (props: any) => {
               >
                 <div className="flex justify-between">
                   <p className="text-black text-xl font-semibold">
-                    Generate Proof of Score Credential
+                    Generate Trust Score Credential
                   </p>
                   {/* <div>
                     <p className="text-md font-semibold text-slate-600">
