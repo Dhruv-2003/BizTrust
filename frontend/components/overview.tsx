@@ -96,7 +96,32 @@ const Overview = (props: any) => {
                   </p>
                 </div>
                 <div className="grid grid-flow-col grid-rows-2 gap-x-10 gap-y-14 mt-10">
-                  <div className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
+                  {VCs &&
+                    VCs.map((data) => {
+                      return (
+                        <div className="w-1/2 px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
+                          <div className="flex flex-col mt-2">
+                            <div>
+                              <p className="text-white text-xl font-semibold">
+                                Proof of Name
+                              </p>
+                              <p className="text-white text-md font-semibold mt-1">
+                                {data.type}
+                              </p>
+                            </div>
+                            <div className="mt-8">
+                              <p className="text-white text-xl font-semibold">
+                                Issued
+                              </p>
+                              <p className="text-white text-md font-semibold mt-1">
+                                {data.issuanceDate}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  {/* <div className="w-1/2 px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
                     <div className="flex flex-col mt-2">
                       <div>
                         <p className="text-white text-xl font-semibold">
@@ -115,8 +140,8 @@ const Overview = (props: any) => {
                         </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
+                  </div> */}
+                  {/* <div className="w-1/2 px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
                     <div className="flex flex-col mt-2">
                       <div>
                         <p className="text-white text-xl font-semibold">
@@ -135,8 +160,8 @@ const Overview = (props: any) => {
                         </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
+                  </div> */}
+                  {/* <div className="w-1/2 px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
                     <div className="flex flex-col mt-2">
                       <div>
                         <p className="text-white text-xl font-semibold">
@@ -155,27 +180,7 @@ const Overview = (props: any) => {
                         </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
-                    <div className="flex flex-col mt-2">
-                      <div>
-                        <p className="text-white text-xl font-semibold">
-                          Proof of Name
-                        </p>
-                        <p className="text-white text-md font-semibold mt-1">
-                          BizTrust
-                        </p>
-                      </div>
-                      <div className="mt-8">
-                        <p className="text-white text-xl font-semibold">
-                          Issued
-                        </p>
-                        <p className="text-white text-md font-semibold mt-1">
-                          11-10-2023
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -202,24 +202,71 @@ const Onboard = () => {
                     Generate Verifications
                   </p>
                 </div>
-                <div className="mt-10">
-                  <div className="flex flex-col">
-                    <p className="text-xl text-black font-semibold">
-                      Generate Proof of Registration
-                    </p>
-                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
-                      Generate
-                    </button>
+                <div className="flex flex-col mt-10">
+                  <div>
+                    <p className="font-semibold text-2xl">Review Details</p>
                   </div>
-                </div>
-                <div className="mt-10">
-                  <div className="flex flex-col">
-                    <p className="text-xl text-black font-semibold">
-                      Generate Proof of Registration
-                    </p>
-                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
-                      Generate
-                    </button>
+                  <div className="w-full grid grid-cols-3 grid-rows-3 gap-x-10 gap-y-10 mt-6">
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">
+                        Company Name
+                      </p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.compname}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">Address</p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.address}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">City</p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.city}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">state</p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.state}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">Country</p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.country}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">Zip Code</p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.zip}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">
+                        Contact Mail
+                      </p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.mail}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">Tax No.</p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.taxNo}
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-slate-500 font-semibold">
+                        Registration No.
+                      </p>
+                      <p className="text-black font-semibold mt-1 text-lg">
+                        {properties.regNo}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-10">
@@ -239,11 +286,11 @@ const Onboard = () => {
                     </p>
                     <input
                       className="px-3 py-2 rounded-lg bg-gray-100 mt-6 w-40 text-xl text-center mx-auto "
-                      placeholder="@ @ @ @"
-                      type="number"
                       onChange={(e) => {
                         setEncryptionKey(e.target.value.toString());
                       }}
+                      placeholder="* * * *"
+                      type="password"
                     ></input>
                     <p className="mt-2 text-xs text-slate-500 text-center w-80 mx-auto">
                       This passcode must be only 4 numbers and remember it to

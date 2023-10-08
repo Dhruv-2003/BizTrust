@@ -10,7 +10,7 @@ import {
 import { db } from "./firebaseConfig";
 
 export const addNewCompany = async (
-  address: `0x${string}`,
+  address: string,
   name: string,
   companyAddress: string,
   mail: string,
