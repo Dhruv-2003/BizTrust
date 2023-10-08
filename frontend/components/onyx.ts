@@ -305,11 +305,10 @@ const createVp = async (
 
       const expirationDate = oneYearFromNow.toISOString();
 
-      const vcDidwithKey = await didEthr.create();
-      console.log(vcDidwithKey);
+      // const vcDidwithKey = await didEthr.create();
+      // console.log(vcDidwithKey);
 
       const vpOptions = {
-        id: vcDidwithKey.did,
         issuanceDate: new Date().toISOString(),
         expirationDate: expirationDate,
       };
@@ -351,6 +350,14 @@ const signVp = async (
   if (holderDidWithKeys) {
     return jwtService.signVP(holderDidWithKeys, vp);
   } else {
+    const ethrProvider = {
+      name: process.env.NEXT_PUBLIC_NETWORK_NAME!,
+      chainId: process.env.NEXT_PUBLIC_CHAIN_ID,
+      rpcUrl: process.env.NEXT_PUBLIC_NETWORK_RPC_URL!,
+      registry: process.env.NEXT_PUBLIC_REGISTRY_CONTRACT_ADDRESS!,
+      gasSource: "",
+    };
+    const didEthr = new EthrDIDMethod(ethrProvider);
     const holderPrivateKey = process.env.NEXT_PUBLIC_HOLDER_ES256K_PRIVATE_KEY;
     if (!holderPrivateKey) {
       console.log("HOLDER PRIVATE KEY NOT SET");
@@ -491,13 +498,13 @@ const verifyVPJwt = async (
                 if (vcVerified) {
                   console.log("\nVerifying subject data with schema\n");
                   // the 2nd param has to be true in case the location if local
-                  const isSubjectDataValid = verifySchema(vcJwt, false);
+                  const isSubjectDataValid = await verifySchema(vcJwt, false);
                   console.log(
                     `\nSubject data schema verification status: ${isSubjectDataValid}\n`
                   );
 
                   console.log("\nVerifying revocation status\n");
-                  const revocationStatus = verifyRevocationStatus(
+                  const revocationStatus = await verifyRevocationStatus(
                     vcJwt,
                     didResolver
                   );
@@ -525,6 +532,7 @@ const verifyVPJwt = async (
         return;
       }
     } catch (err) {
+      console.log(err);
       console.log("\nFailed to fetch file\n");
       console.log(
         "\nTo run this script you must have a valid VP and a valid signed VP JWT\n"
