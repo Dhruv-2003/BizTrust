@@ -15,8 +15,6 @@ import { Wallet, providers, ethers } from "ethers";
 import { ChainId } from "@biconomy/core-types";
 import { Magic } from "magic-sdk";
 
-
-
 const Onboard = () => {
   const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,16 +26,16 @@ const Onboard = () => {
   const [magicLink, setMagicLink] = useState<any>();
 
   useEffect(() => {
-    if(!magicLink) {
+    if (!magicLink) {
       const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
         network: {
           rpcUrl: "https://rpc-mumbai.maticvigil.com",
           chainId: 80001,
         },
       });
-      setMagicLink(magic)
+      setMagicLink(magic);
     }
-  }, [])
+  }, []);
 
   const bundler: IBundler = new Bundler({
     bundlerUrl:

@@ -10,14 +10,12 @@ import {
   BiconomySmartAccountV2,
 } from "@biconomy/account";
 
-const [provider, setProvider] = useState<ethers.providers.Provider | null>(null)
-const [address, setAddress] = useState<any>();
-const [smartAccount, setSmartAccount] =
-    useState<BiconomySmartAccountV2 | null>(null);
+// provider: <ethers.providers.Provider | null>
+// smartAccount: <BiconomySmartAccountV2 | null>
 
 const nftAddress = "0x0a7755bDfb86109D9D403005741b415765EAf1Bc"
 
-export const handleMint = async () => {
+export const handleTransfer = async ({provider, address, smartAccount}) => {
   const contract = new ethers.Contract(
     nftAddress,
     abi,
