@@ -18,8 +18,10 @@ import { createIssueVC } from "@/components/onyxMethods";
 import { CredentialType, SchemaURL } from "@/components/onyx";
 import { async } from "@firebase/util";
 import { addNewCompany } from "@/firebase/methods";
+import { useRouter } from "next/router";
 
 const Onboard = () => {
+  const router = useRouter();
   const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [smartAccount, setSmartAccount] =
@@ -103,7 +105,6 @@ const Onboard = () => {
   const createCompany = async () => {
     // check data
     const compAddress = `${properties.address}, ${properties.city}, ${properties.state}, ${properties.country} - ${properties.zip}`;
-
     console.log(
       address,
       properties.compname,
@@ -113,14 +114,16 @@ const Onboard = () => {
       properties.regNo
     );
     // add data to Firebase first
-    // await addNewCompany(
-    //   address,
-    //   properties.compname,
-    //   compAddress,
-    //   properties.mail,
-    //   properties.taxNo,
-    //   properties.regNo
-    // );
+    await addNewCompany(
+      address,
+      properties.compname,
+      compAddress,
+      properties.mail,
+      properties.taxNo,
+      properties.regNo
+    );
+
+    router.push("/dashboard");
   };
 
   const issueOnboardingVCs = async () => {
@@ -129,53 +132,64 @@ const Onboard = () => {
       console.log("ENCRYPTION NOT SET");
       return;
     }
+    // console.log(
+    //   address,
+    // );
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_NAME,
-      {
-        name: properties.compname,
-      },
-      CredentialType.PROOF_OF_NAME,
-      encryptionKey
-    );
+    // console.log(properties)
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
-      {
-        name: properties.compname,
-        address: properties.address,
-        city: properties.city,
-        state: properties.state,
-        country: properties.country,
-        zip: properties.zip,
-      },
-      CredentialType.PROOF_OF_ADDRESS,
-      encryptionKey
-    );
+    // console.log(encryptionKey)
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
-      {
-        name: properties.compname,
-        registeration_no: properties.regNo,
-      },
-      CredentialType.PROOF_OF_REGISTERATION,
-      encryptionKey
-    );
+    try {
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_NAME,
+        {
+          name: properties.compname,
+        },
+        CredentialType.PROOF_OF_NAME,
+        encryptionKey
+      );
 
-    await createIssueVC(
-      address,
-      SchemaURL.SCHEMA_PROOF_OF_TAX,
-      {
-        name: properties.compname,
-        tax_no: properties.taxNo,
-      },
-      CredentialType.PROOF_OF_TAX,
-      encryptionKey
-    );
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_ADDRESS,
+        {
+          name: properties.compname,
+          address: properties.address,
+          city: properties.city,
+          state: properties.state,
+          country: properties.country,
+          zip: properties.zip,
+        },
+        CredentialType.PROOF_OF_ADDRESS,
+        encryptionKey
+      );
+
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_REGISTERATION,
+        {
+          name: properties.compname,
+          registeration_no: properties.regNo,
+        },
+        CredentialType.PROOF_OF_REGISTERATION,
+        encryptionKey
+      );
+
+      await createIssueVC(
+        address,
+        SchemaURL.SCHEMA_PROOF_OF_TAX,
+        {
+          name: properties.compname,
+          tax_no: properties.taxNo,
+        },
+        CredentialType.PROOF_OF_TAX,
+        encryptionKey
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -269,16 +283,7 @@ const Onboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-10">
-                  <div className="flex flex-col">
-                    <p className="text-xl text-black font-semibold">
-                      Generate Proof of Registration
-                    </p>
-                    <button className="px-10 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl">
-                      Generate
-                    </button>
-                  </div>
-                </div>
+
                 <div className="mt-10">
                   <div className="flex flex-col">
                     <p className="text-xl text-black font-semibold">
@@ -296,13 +301,28 @@ const Onboard = () => {
                       This passcode must be only 4 numbers and remember it to
                       further use it for verifying your identity.
                     </p>
-                    <button
+                    {/* <button
                       className="px-10 w-1/3 mx-auto py-2 mt-10 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl"
                       onClick={() => {
                         issueOnboardingVCs();
                       }}
                     >
                       Set
+                    </button> */}
+                  </div>
+                </div>
+                <div className="mt-10">
+                  <div className="flex flex-col">
+                    <p className="text-xl text-black font-semibold">
+                      Generate Proof of Registration
+                    </p>
+                    <button
+                      className="px-5 w-1/3 mx-auto py-2 mt-5 bg-gradient-to-tl from-blue-300 text-xl font-semibold hover:scale-105 duration-300 to-blue-500 text-white rounded-xl "
+                      onClick={() => {
+                        issueOnboardingVCs();
+                      }}
+                    >
+                      Generate
                     </button>
                   </div>
                 </div>

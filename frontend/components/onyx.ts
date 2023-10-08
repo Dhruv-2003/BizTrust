@@ -19,8 +19,6 @@ import {
   SchemaManager,
   PROOF_OF_ADDRESS,
   PROOF_OF_NAME,
-  SCHEMA_PROOF_OF_NAME,
-  SCHEMA_PROOF_OF_ADDRESS,
 } from "@jpmorganchase/onyx-ssi-sdk";
 // import { camelCase, includes } from "lodash";
 
@@ -34,6 +32,8 @@ import {
   SCHEMA_PROOF_OF_TAX,
   SCHEMA_VERIFIED_CUSTOMER,
   SCHEMA_TRUST_SCORE_CREDENTIAL,
+  SCHEMA_PROOF_OF_NAME,
+  SCHEMA_PROOF_OF_ADDRESS,
   VERIFIED_CUSTOMER,
   TRUST_SCORE_CREDENTIAL,
   PROOF_OF_TAX,
@@ -305,12 +305,13 @@ const createVp = async (
 
       const expirationDate = oneYearFromNow.toISOString();
 
-      // const vcDidwithKey = await didEthr.create();
-      // console.log(vcDidwithKey);
+      const vcDidwithKey = await didEthr.create();
+      console.log(vcDidwithKey);
 
       const vpOptions = {
         issuanceDate: new Date().toISOString(),
         expirationDate: expirationDate,
+        id: vcDidwithKey.did,
       };
 
       console.log("\nGenerating a VP\n");

@@ -31,6 +31,10 @@ export const PROOF_OF_ENTITY = "ProofOfEntity";
 export const PROOF_OF_VERIFIED_CUSTOMER = "ProofOfVerifiedCustomer";
 export const PROOF_OF_TRUST_SCORE = "ProofOfTrustScore";
 
+export const SCHEMA_PROOF_OF_NAME =
+  "https://cdn.jsdelivr.net/gh/Dhruv-2003/BizTrust/frontend/schemas/proofOfName.json";
+export const SCHEMA_PROOF_OF_ADDRESS =
+  "https://cdn.jsdelivr.net/gh/Dhruv-2003/BizTrust/frontend/schemas/proofOfAddress.json";
 export const SCHEMA_PROOF_OF_REGISTERATION =
   "https://cdn.jsdelivr.net/gh/Dhruv-2003/BizTrust/frontend/schemas/proofOfRegisteration.json";
 export const SCHEMA_PROOF_OF_TAX =
