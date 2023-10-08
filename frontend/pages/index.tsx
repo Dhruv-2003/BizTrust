@@ -96,7 +96,7 @@ export default function Home() {
         theme: "dark",
       });
       setLoading(false);
-      await router.push("/dashboard")
+      await router.push("/onboard")
     } catch (error) {
       console.error(error);
     }
