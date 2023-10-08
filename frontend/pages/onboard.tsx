@@ -1,14 +1,5 @@
 /* eslint-disable @next/next/no-assign-module-variable */
 import React, { useEffect, useState } from "react";
-// import { IPaymaster, BiconomyPaymaster } from "@biconomy/paymaster";
-// import { IBundler, Bundler } from "@biconomy/bundler";
-// import {
-//   BiconomySmartAccountV2,
-//   DEFAULT_ENTRYPOINT_ADDRESS,
-// } from "@biconomy/account";
-// import { Wallet, providers, ethers } from "ethers";
-// import { ChainId } from "@biconomy/core-types";
-// import { ParticleAuthModule, ParticleProvider } from "@biconomy/particle-auth";
 import {
   ECDSAOwnershipValidationModule,
   DEFAULT_ECDSA_OWNERSHIP_MODULE,
@@ -24,6 +15,8 @@ import { Wallet, providers, ethers } from "ethers";
 import { ChainId } from "@biconomy/core-types";
 import { Magic } from "magic-sdk";
 
+
+
 const Onboard = () => {
   const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,13 +25,19 @@ const Onboard = () => {
   const [provider, setProvider] = useState<ethers.providers.Provider | null>(
     null
   );
+  const [magicLink, setMagicLink] = useState<any>();
 
-  const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
-    network: {
-      rpcUrl: "https://rpc-mumbai.maticvigil.com",
-      chainId: 80001,
-    },
-  });
+  useEffect(() => {
+    if(!magicLink) {
+      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
+        network: {
+          rpcUrl: "https://rpc-mumbai.maticvigil.com",
+          chainId: 80001,
+        },
+      });
+      setMagicLink(magic)
+    }
+  }, [])
 
   const bundler: IBundler = new Bundler({
     bundlerUrl:
@@ -54,9 +53,9 @@ const Onboard = () => {
   const connect = async () => {
     try {
       setLoading(true);
-      await magic.wallet.connectWithUI();
+      await magicLink.wallet.connectWithUI();
       const web3Provider = new ethers.providers.Web3Provider(
-        magic.rpcProvider,
+        magicLink.rpcProvider,
         "any"
       );
       setProvider(web3Provider);
