@@ -1,7 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { getVCs } from "@/firebase/methods";
 
-const Overview = () => {
+const Overview = (props: any) => {
+  const [VCs, setVCs] = useState<any[]>();
+  const address = props.address;
+
+  useEffect(() => {
+    if (address) {
+      getVCsInfo(address);
+    }
+  }, [address]);
+
+  const getVCsInfo = async (address: `0x${string}`) => {
+    const data = await getVCs(address);
+    // array of VCs
+    // type CredentialPayload {
+    //   '@context': string | string[]
+    //   id?: string
+    //   type: string | string[]
+    //   issuer: IssuerType
+    //   issuanceDate: DateType
+    //   expirationDate?: DateType
+    //   credentialSubject: Extensible<{
+    //     id?: string
+    //   }>
+    //   credentialStatus?: CredentialStatus
+    //   evidence?: any
+    //   termsOfUse?: any
+    // }
+    setVCs(data);
+  };
+
   return (
     <div className="w-screen">
       <div className="flex flex-col">
@@ -46,7 +76,9 @@ const Overview = () => {
             <div className="w-2/3 mx-6">
               <div className="bg-white px-10 py-6 rounded-xl shadow-xl">
                 <div>
-                    <p className="font-semibold text-black text-2xl">Digital IDs</p>
+                  <p className="font-semibold text-black text-2xl">
+                    Digital IDs
+                  </p>
                 </div>
                 <div className="grid grid-flow-col grid-rows-2 gap-x-10 gap-y-14 mt-10">
                   <div className="w-full px-6 py-2 bg-gradient-to-tl from-blue-200 to-blue-500 rounded-xl shadow-lg hover:scale-105 duration-300">
@@ -163,21 +195,29 @@ const Overview = () => {
                   </div>
                 </div>
                 <div className="mt-10 mb-4">
-                    <div className="bg-white px-2 py-6 rounded-xl shadow-xl">
-                        <div className="mx-3">
-                            <p className="text-xl font-semibold">Contact Details</p>
-                        </div>
-                        <div className="w-full flex flex-col mt-4 mx-3">
-                            <div>
-                                <p className="font-semibold text-neutral-400">Company Address</p>
-                                <p className="font-semibold text-lg mt-1">B-522, Zurich, Switzerland</p>
-                            </div>
-                            <div>
-                                <p className="font-semibold text-neutral-400 mt-4">Company Mail</p>
-                                <p className="font-semibold text-lg mt-1">biztrust.contact@gmail.com</p>
-                            </div>
-                        </div>
+                  <div className="bg-white px-2 py-6 rounded-xl shadow-xl">
+                    <div className="mx-3">
+                      <p className="text-xl font-semibold">Contact Details</p>
                     </div>
+                    <div className="w-full flex flex-col mt-4 mx-3">
+                      <div>
+                        <p className="font-semibold text-neutral-400">
+                          Company Address
+                        </p>
+                        <p className="font-semibold text-lg mt-1">
+                          B-522, Zurich, Switzerland
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-neutral-400 mt-4">
+                          Company Mail
+                        </p>
+                        <p className="font-semibold text-lg mt-1">
+                          biztrust.contact@gmail.com
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

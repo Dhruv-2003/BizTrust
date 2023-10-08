@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import Overview from "@/components/overview";
 import PaymentsHistory from "@/components/paymentsHistory";
 import Invoice from "@/components/invoice";
 import VP from "@/components/vp";
+import { getCompanyInfo } from "@/firebase/methods";
 
 const Dashboard = () => {
+  const [userData, setUserData] = useState<any>();
+  const address = ""; // get the user connected address
+
+  useEffect(() => {
+    if (address) {
+      getInfo(address);
+    }
+  }, [address]);
+
+  const getInfo = async (address: `0x${string}`) => {
+    const data = await getCompanyInfo(address);
+    // {
+    //   Name: name,
+    //   Address: companyAddress,
+    //   ContactMail: mail,
+    //   TaxNo: taxNo,
+    //   RegNo: regNo,
+    //   trustScore: 500,
+    //   invoicesIssued: [],
+    //   invoicesToPay: [],
+    // }
+    // Data will come in this way , just display as you need to and pass on the rest to the corresponding components
+  };
+
   return (
     <div className="w-screen">
       <div className="">
@@ -21,13 +46,13 @@ const Dashboard = () => {
               <div className="bg-slate-100 w-full">
                 <TabPanels>
                   <TabPanel>
-                    <Overview />
+                    <Overview address={address} />
                   </TabPanel>
                   <TabPanel>
-                    <VP/>
+                    <VP address={address} />
                   </TabPanel>
                   <TabPanel>
-                    <PaymentsHistory />
+                    <PaymentsHistory address={address} />
                   </TabPanel>
                   <TabPanel>
                     <Invoice />
