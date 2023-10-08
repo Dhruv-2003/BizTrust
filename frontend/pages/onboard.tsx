@@ -99,14 +99,10 @@ const Onboard = () => {
     }
   };
 
-  const createCompany = async () => {
-    // check data
-
-    // add data to Firebase first
-    await addNewCompany();
-  };
-
   const issueOnboardindVCs = async () => {
+
+    await addNewCompany(address,properties.compname,properties.address,properties.mail,properties.taxNo,properties.regNo);
+
     await createIssueVC(
       address,
       SchemaURL.SCHEMA_PROOF_OF_NAME,
@@ -294,7 +290,7 @@ const Onboard = () => {
                   >
                     Back
                   </button>
-                  <button className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl">
+                  <button onClick={() => issueOnboardindVCs()} className="px-10 w-1/3 mx-auto py-2 mt-10 bg-white border border-blue-500 text-xl font-semibold hover:scale-105 duration-300  text-blue-500 rounded-xl">
                     Finish
                   </button>
                 </div>
