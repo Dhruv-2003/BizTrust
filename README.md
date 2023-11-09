@@ -2,7 +2,7 @@
 
 BizTrust is a comprehensive solution that seamlessly integrates various technologies to address the challenges inherent in B2B (business-to-business) payments and simplify the onboarding process for businesses. At its core, our solution offers a streamlined, secure, and efficient ecosystem for businesses to engage in digital transactions.
 
-Presentation : https://pitch.com/public/970b826a-facc-4d3d-a614-c03d178a3d27
+Presentation : https://www.canva.com/design/DAFy67NtqHg/1_SYykD-Nc-UhUtBFffs3Q/view
 ## Existing Problems
 
 1. **Transparency Deficiency:** We eliminate the opacity surrounding business identities by issuing verifiable credentials based on company information, addressing the lack of transparency that plagues B2B transactions.
